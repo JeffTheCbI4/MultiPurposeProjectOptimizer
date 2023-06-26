@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiPurposeProjectOptimizer", "MultiPurposeProjectOptimizer\MultiPurposeProjectOptimizer.csproj", "{2CD9A745-4BE3-4DE6-AAB7-61652CECCA63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPPOptimizerTests", "MPPOptimizerTests\MPPOptimizerTests.csproj", "{D1E760E9-5C4C-4A04-B48C-56345E5CD8D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CD9A745-4BE3-4DE6-AAB7-61652CECCA63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CD9A745-4BE3-4DE6-AAB7-61652CECCA63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CD9A745-4BE3-4DE6-AAB7-61652CECCA63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CD9A745-4BE3-4DE6-AAB7-61652CECCA63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1E760E9-5C4C-4A04-B48C-56345E5CD8D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1E760E9-5C4C-4A04-B48C-56345E5CD8D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1E760E9-5C4C-4A04-B48C-56345E5CD8D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1E760E9-5C4C-4A04-B48C-56345E5CD8D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2784953C-AE81-4AF7-B9CE-3C69DDFB3715}
+	EndGlobalSection
+EndGlobal
