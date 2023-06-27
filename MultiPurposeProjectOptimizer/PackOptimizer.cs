@@ -163,7 +163,7 @@ namespace MultiPurposeProjectOptimizer
                     {
                         combinedProjectsStatus.Add(projectId, solutionSet2[j].ProjectStatus[projectId]);
                     }
-                    bool isMerged = solutionSet1[i].isMerged || solutionSet2[j].isMerged;
+                    bool isMerged = solutionSet1[i].IsMerged || solutionSet2[j].IsMerged;
                     var mergedSolution = new Solution(
                         combinedSolutionProperties,
                         combinedProjectsStatus, isMerged, new List<Solution>() { solutionSet1[i], solutionSet2[j] });
@@ -423,7 +423,7 @@ namespace MultiPurposeProjectOptimizer
             for (int i = solutions.Count; i >= 0; i--)
             {
                 optimalCandidate = sortedSolutions[i];
-                if (!optimalCandidate.isMerged) break;
+                if (!optimalCandidate.IsMerged) break;
                 bool isAllowable = checkAllowability(optimalCandidate, Caps);
                 if (isAllowable) break;
 
@@ -502,7 +502,7 @@ namespace MultiPurposeProjectOptimizer
             for (int i = 0; i < upperSolution.ContainedSolutions.Count; i++)
             {
                 Solution solution = upperSolution.ContainedSolutions[i];
-                if (!solution.isMerged) continue;
+                if (!solution.IsMerged) continue;
                 Dictionary<Solution, List<int>> path = findProblematicSolutionOrigin(solution);
                 Solution problematicSolution = path.Keys.First();
                 path[problematicSolution].Add(i);

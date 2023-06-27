@@ -31,15 +31,15 @@ namespace MultiPurposeProjectOptimizer
         {
             this.button1 = new System.Windows.Forms.Button();
             this.SolverInputsGrid = new System.Windows.Forms.DataGridView();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.RowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CapsListName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CapButtonsRow = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OptimalProjectList = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.backButton = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.SolverInputsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -59,7 +59,7 @@ namespace MultiPurposeProjectOptimizer
             this.SolverInputsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SolverInputsGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RowNumber,
-            this.Name,
+            this.CapsListName,
             this.CapButtonsRow,
             this.Column1,
             this.OptimalProjectList});
@@ -68,9 +68,34 @@ namespace MultiPurposeProjectOptimizer
             this.SolverInputsGrid.Size = new System.Drawing.Size(540, 150);
             this.SolverInputsGrid.TabIndex = 1;
             // 
+            // RowNumber
+            // 
+            this.RowNumber.HeaderText = "№";
+            this.RowNumber.Name = "RowNumber";
+            // 
+            // CapsListName
+            // 
+            this.CapsListName.HeaderText = "Название набора ограничений";
+            this.CapsListName.Name = "CapsListName";
+            // 
+            // CapButtonsRow
+            // 
+            this.CapButtonsRow.HeaderText = "Ограничения";
+            this.CapButtonsRow.Name = "CapButtonsRow";
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Вводный набор проектов";
+            this.Column1.Name = "Column1";
+            // 
+            // OptimalProjectList
+            // 
+            this.OptimalProjectList.HeaderText = "Оптимальный набор проектов";
+            this.OptimalProjectList.Name = "OptimalProjectList";
+            // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button3);
+            this.groupBox1.Controls.Add(this.backButton);
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.SolverInputsGrid);
@@ -81,6 +106,16 @@ namespace MultiPurposeProjectOptimizer
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Наборы вводных данных и решений";
+            // 
+            // backButton
+            // 
+            this.backButton.Location = new System.Drawing.Point(552, 146);
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(97, 23);
+            this.backButton.TabIndex = 6;
+            this.backButton.Text = "Назад";
+            this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
             // button4
             // 
@@ -100,40 +135,6 @@ namespace MultiPurposeProjectOptimizer
             this.button2.Text = "Добавить";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(552, 146);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(97, 23);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Назад";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // RowNumber
-            // 
-            this.RowNumber.HeaderText = "№";
-            this.RowNumber.Name = "RowNumber";
-            // 
-            // Name
-            // 
-            this.Name.HeaderText = "Название набора ограничений";
-            this.Name.Name = "Name";
-            // 
-            // CapButtonsRow
-            // 
-            this.CapButtonsRow.HeaderText = "Ограничения";
-            this.CapButtonsRow.Name = "CapButtonsRow";
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Вводный набор проектов";
-            this.Column1.Name = "Column1";
-            // 
-            // OptimalProjectList
-            // 
-            this.OptimalProjectList.HeaderText = "Оптимальный набор проектов";
-            this.OptimalProjectList.Name = "OptimalProjectList";
-            // 
             // SolverInputsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -142,6 +143,7 @@ namespace MultiPurposeProjectOptimizer
             this.Controls.Add(this.groupBox1);
             this.Name = "SolverInputsForm";
             this.Text = "Решение задач";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SolverInputsForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.SolverInputsGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -155,12 +157,12 @@ namespace MultiPurposeProjectOptimizer
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button backButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn RowNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CapsListName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CapButtonsRow;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn OptimalProjectList;
-        private System.Windows.Forms.Button button3;
     }
 }
 

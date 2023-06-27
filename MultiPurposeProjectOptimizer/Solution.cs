@@ -11,13 +11,13 @@ namespace MultiPurposeProjectOptimizer
         public Dictionary<string, double> SolutionProperties { get; set; }
         public List<Solution> ContainedSolutions { get; set; }
         public Dictionary<int, bool?> ProjectStatus { get; set; }
-        public bool isMerged { get; set; }
+        public bool IsMerged { get; set; }
 
         public Solution(Dictionary<string, double> solutionProperties, Dictionary<int, bool?> projectStatus, bool isMerged)
         {
             SolutionProperties = solutionProperties;
             ProjectStatus = projectStatus;
-            isMerged = isMerged;
+            IsMerged = isMerged;
         }
 
         public Solution(Dictionary<string, double> solutionProperties,

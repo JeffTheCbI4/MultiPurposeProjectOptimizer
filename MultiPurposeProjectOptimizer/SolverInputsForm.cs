@@ -12,14 +12,26 @@ namespace MultiPurposeProjectOptimizer
 {
     public partial class SolverInputsForm : Form
     {
-        public SolverInputsForm()
+        Form MainMenu;
+        public SolverInputsForm(Form mainMenu)
         {
             InitializeComponent();
+            MainMenu = mainMenu;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            
+        }
 
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SolverInputsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MainMenu.Show();
         }
     }
 }
