@@ -20,7 +20,8 @@ namespace MultiPurposeProjectOptimizer
         public void Solve()
         {
             List<List<Solution>> solutionLists = TurnProjectsIntoSolutionLists(Projects);
-            SolveWithoutMPP(solutionLists, Caps);
+            OptimalSolution = SolveWithoutMPP(solutionLists, Caps);
+
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace MultiPurposeProjectOptimizer
         /// <returns>
         /// Лист решений из последней стадии слияний. <= (??? Надо ещё это обдумать)
         /// </returns>
-        private List<Solution> SolveWithoutMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
+        private Solution SolveWithoutMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
         {
             List<List<List<Solution>>> history = new List<List<List<Solution>>>();
             history.Add(solutionsLists);
@@ -44,9 +45,10 @@ namespace MultiPurposeProjectOptimizer
                 solutionsLists = MergeSolutionSets(solutionsLists);
             }
             //TODO: Определяем оптимал здесь или выше?
-            //Solution optimalSolution = findOptimalInSolutionSet(solutionSets[0]);
+            Solution optimalSolution = findOptimalInSolutionSet(solutionsLists[0], history);
+
             
-            return solutionsLists[0];
+            return optimalSolution;
         }
 
         /// <summary>
@@ -100,7 +102,9 @@ namespace MultiPurposeProjectOptimizer
                 combinedSolutionSet = DiscardBadSolutions(combinedSolutionSet);
                 combinedSolutionSet = DiscardDominatedSolutions(combinedSolutionSet);
 
-                bool hasProblematicSolutions = false;
+                //TODO: разкомментировать код ниже когда разберемся со поиском оптимала в слитых решениях
+                //Код ниже проверяет наличие слитого решения в наборе.
+                /*bool hasProblematicSolutions = false;
                 for (int j = 0; j < combinedSolutionSet.Count; j++)
                 {
                     if (combinedSolutionSet[j].isMerged)
@@ -108,12 +112,14 @@ namespace MultiPurposeProjectOptimizer
                         hasProblematicSolutions = true;
                         break;
                     }
-                }
+                }*/
 
-                if (!hasProblematicSolutions && combinedSolutionSet.Count > SolutionSetCap && solutionSets.Count > 2)
+                //TODO: разкомментировать код ниже когда разберемся со поиском оптимала в слитых решениях
+                //Код ниже сливает решения в наборе решений в зависимости от ограничения на количество решений
+                /*if (!hasProblematicSolutions && combinedSolutionSet.Count > SolutionSetCap && solutionSets.Count > 2)
                 {
                     combinedSolutionSet = MergeSolutionsInSet(combinedSolutionSet, SolutionSetCap);
-                }
+                }*/
 
                 newSolutionSets.Add(combinedSolutionSet);
             }
@@ -317,6 +323,7 @@ namespace MultiPurposeProjectOptimizer
             return mergedSolution;
         }
 
+        //Устаревший метод, см. MergeSolutionsGroup
         private Solution MergeTwoSolutions(Solution firstSolution, Solution secondSolution)
         {
             Dictionary<string, double> mergedProperties = new Dictionary<string, double>();
@@ -405,7 +412,7 @@ namespace MultiPurposeProjectOptimizer
         /// Поиск оптимального решения в листе решений.
         /// Оптимальным считается решение с наивысшим значением эффекта,
         /// не выходящее за рамки ограничений. "Проблемные" решения
-        /// дополнительно проверяются на возможность.
+        /// дополнительно проверяются на допустимость.
         /// </summary>
         /// <param name="solutions">Лист решений</param>
         /// <returns>Наиболее оптимальное решение</returns>
@@ -423,7 +430,8 @@ namespace MultiPurposeProjectOptimizer
                 //TODO: дописать метод. Нужно:
                 //2) Если не допустимо, нужно перерешать всё, начиная с шага, на котором
                 //проблематичные решение возникло.
-                Dictionary<Solution, List<int>> problematicSolutionInfo = findProblematicSolutionOrigin(optimalCandidate);
+                //TODO: разкомментить когда разберемся с поисками оптимала в слитых решениях
+                /*Dictionary<Solution, List<int>> problematicSolutionInfo = findProblematicSolutionOrigin(optimalCandidate);
                 Solution problematicSolution = problematicSolutionInfo.Keys.First();
                 List<int> path = problematicSolutionInfo[problematicSolution];
                 int pathIndex = 0;
@@ -446,7 +454,8 @@ namespace MultiPurposeProjectOptimizer
                     if (problematicList[j] != problematicSolution) continue;
                     problematicSolutionIndex = j;
                     break;
-                }
+                }*/
+
                 //TODO: теперь надо как-то пройтись по всем не-проблемным решениям
                 // 1) Выбираем случайное решение в проблемном решении
                 // 2) Делаем 2 этапа. В одном проблемное решение заменяется на выбранное,
@@ -455,12 +464,13 @@ namespace MultiPurposeProjectOptimizer
                 // 4) Сравниваем. Если какое-то макс решение допустимо, то это оптимал
                 // если оба недопустимы, переходим к другому проблемному решению в проблемном этапе и возвращаемся на шаг 1
                 // 5) Если перебрали все проблемные решения, а допустимое не нашлось, переходим к i--;
-                foreach (Solution solution in problematicSolution.ContainedSolutions)
+                //TODO: разкомментить когда разберемся с поиском оптимала в слитых решениях
+                /*foreach (Solution solution in problematicSolution.ContainedSolutions)
                 {
 
                 }
 
-                List<Solution> solutionsWithoutProblematic = SolveWithoutMPP(problematicStage, Caps);
+                List<Solution> solutionsWithoutProblematic = SolveWithoutMPP(problematicStage, Caps);*/
                 
             }
             return optimalCandidate;
