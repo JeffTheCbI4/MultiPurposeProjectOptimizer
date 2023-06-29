@@ -70,7 +70,7 @@ namespace MultiPurposeProjectOptimizer
                 {
                     zeroProperties.Add(propertyName, 0);
                 }
-                var noProjectSolution = new Solution(zeroProperties, new Dictionary<int, bool?> { { project.ProjectId, false } }, false);
+                var noProjectSolution = new Solution(zeroProperties, new Dictionary<int, bool?> { { project.Id, false } }, false);
 
                 Dictionary<string, double> projectProperties = new Dictionary<string, double>();
                 foreach (string propertyName in project.Properties.Keys)
@@ -78,7 +78,7 @@ namespace MultiPurposeProjectOptimizer
                     projectProperties.Add(propertyName, project.Properties[propertyName]);
                 }
                 var takeProjectSolution = new Solution(
-                    zeroProperties, new Dictionary<int, bool?> { { project.ProjectId, true } }, false);
+                    zeroProperties, new Dictionary<int, bool?> { { project.Id, true } }, false);
 
                 projectSolutions.Add(noProjectSolution);
                 projectSolutions.Add(takeProjectSolution);

@@ -48,9 +48,8 @@ namespace MultiPurposeProjectOptimizer
             if (EditedProject == null)
             {
                 string projectName = ProjectNameTextbox.Text;
-                int projectId = ProjectsList.Count > 0 ? ProjectsList.Last().ProjectId + 1 : 0;
-                Project addedProject = new Project(projectId, projectName, new Dictionary<string, double>());
-                ProjectsList.Add(addedProject);
+                bool isMPP = isMPPCheckbox.Checked;
+                DBManager.InsertProject(projectName, 1, isMPP);
                 PreviousForm.RefreshProjectGrid();
             }
             this.Close();

@@ -18,6 +18,7 @@ namespace MultiPurposeProjectOptimizer
             InitializeComponent();
             MainMenu = mainMenu;
             RefreshProjectGrid();
+            RefreshPropertyGrid();
         }
 
         private void backButton_Click(object sender, EventArgs e)
@@ -42,10 +43,10 @@ namespace MultiPurposeProjectOptimizer
         private void deleteProjectButton_Click(object sender, EventArgs e)
         {
             int rowsCount = ProjectsGrid.SelectedRows.Count;
-            for (int i = rowsCount - 1; i >= 0; i--)
+            for (int i = 0; i < rowsCount; i++)
             {
-                int removedIndex = int.Parse(ProjectsGrid.SelectedRows[i].Cells["ProjectRowNumber"].Value.ToString());
-                MainMenu.Projects.RemoveAt(removedIndex - 1);
+                int removedId = int.Parse(ProjectsGrid.SelectedRows[i].Cells["ProjectId"].Value.ToString());
+                DBManager.DeleteProject(removedId);
             }
             RefreshProjectGrid();
         }
@@ -53,10 +54,12 @@ namespace MultiPurposeProjectOptimizer
         public void RefreshProjectGrid()
         {
             ProjectsGrid.Rows.Clear();
-            for (int i = 0; i < MainMenu.Projects.Count; i++)
+            List<Dictionary<string,string>> projectsList = DBManager.SelectProjects();
+            for (int i = 0; i < projectsList.Count; i++)
             {
-                string projectName = MainMenu.Projects[i].ProjectName;
-                ProjectsGrid.Rows.Add(i + 1, projectName);
+                Dictionary<string, string> project = projectsList[i];
+                string isMPString = project["isMultiPurpose"] == "True" ? "Да" : "Нет";
+                ProjectsGrid.Rows.Add(project["projectId"], i + 1, project["projectName"], "Свойства", isMPString, "Влияние");
             }
         }
 
@@ -64,6 +67,55 @@ namespace MultiPurposeProjectOptimizer
         {
             this.Enabled = false;
             new ProjectAddAndEditForm(this, MainMenu.Projects).Show();
+        }
+
+        public void RefreshPropertyGrid()
+        {
+            PropertiesGrid.Rows.Clear();
+            List<Dictionary<string, string>> propertiesList = DBManager.SelectProperty();
+            for (int i = 0; i < propertiesList.Count; i++)
+            {
+                Dictionary<string, string> property = propertiesList[i];
+                PropertiesGrid.Rows.Add(property["propertyId"], i + 1, property["propertyName"]);
+            }
+        }
+
+        private void AddPropertyButton_Click(object sender, EventArgs e)
+        {
+
+            /*int lastRowNumber = PropertiesGrid.Rows[PropertiesGrid.Rows.Count].Cells["RowNumber"].Value;
+            PropertiesGrid.Rows.Add();*/
+        }
+
+        private void PropertiesGrid_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            e.Cancel = false;
+            int rowIndex = e.RowIndex;
+            var validatedCells = PropertiesGrid.Rows[rowIndex].Cells;
+            DataGridViewRowCollection rows = PropertiesGrid.Rows;
+
+            for (int i = 0; i < rows.Count - 1; i++)
+            {
+                DataGridViewRow row = rows[i];
+                if (row.Cells["PropertyName"].Value.ToString() == validatedCells["PropertyName"].Value.ToString() && i != rowIndex)
+                {
+                    validatedCells["PropertyName"].ErrorText = "Имя должно быть уникальным";
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void PropertiesGrid_RowValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow currentRow = PropertiesGrid.Rows[e.RowIndex];
+            //Если у строки нет Id - то операция добавления
+            //Иначе - операция обновления
+            if (currentRow.Cells["Id"].Value == null)
+            {
+                string propertyName = currentRow.Cells["PropertyName"].Value.ToString();
+                DBManager.InsertProperty(propertyName);
+                RefreshProjectGrid();
+            }
         }
     }
 }

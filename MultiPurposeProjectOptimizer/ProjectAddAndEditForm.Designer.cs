@@ -35,15 +35,15 @@ namespace MultiPurposeProjectOptimizer
             this.RowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button4 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.AddProperty = new System.Windows.Forms.Button();
+            this.isMPPCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.button1 = new System.Windows.Forms.Button();
+            this.AddInfluence = new System.Windows.Forms.Button();
             this.ConfirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -96,30 +96,30 @@ namespace MultiPurposeProjectOptimizer
             this.PropertyValue.HeaderText = "Значение";
             this.PropertyValue.Name = "PropertyValue";
             // 
-            // button4
+            // AddProperty
             // 
-            this.button4.Location = new System.Drawing.Point(359, 30);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(122, 33);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Добавить";
-            this.button4.UseVisualStyleBackColor = true;
+            this.AddProperty.Location = new System.Drawing.Point(359, 30);
+            this.AddProperty.Name = "AddProperty";
+            this.AddProperty.Size = new System.Drawing.Size(122, 33);
+            this.AddProperty.TabIndex = 4;
+            this.AddProperty.Text = "Добавить";
+            this.AddProperty.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // isMPPCheckbox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox1.Location = new System.Drawing.Point(55, 223);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(231, 28);
-            this.checkBox1.TabIndex = 5;
-            this.checkBox1.Text = "Многоцелевой проект";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.isMPPCheckbox.AutoSize = true;
+            this.isMPPCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.isMPPCheckbox.Location = new System.Drawing.Point(55, 223);
+            this.isMPPCheckbox.Name = "isMPPCheckbox";
+            this.isMPPCheckbox.Size = new System.Drawing.Size(231, 28);
+            this.isMPPCheckbox.TabIndex = 5;
+            this.isMPPCheckbox.Text = "Многоцелевой проект";
+            this.isMPPCheckbox.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.dataGridView1);
-            this.groupBox1.Controls.Add(this.button4);
+            this.groupBox1.Controls.Add(this.AddProperty);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox1.Location = new System.Drawing.Point(55, 38);
             this.groupBox1.Name = "groupBox1";
@@ -131,7 +131,7 @@ namespace MultiPurposeProjectOptimizer
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.dataGridView2);
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.AddInfluence);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox2.Location = new System.Drawing.Point(55, 257);
             this.groupBox2.Name = "groupBox2";
@@ -170,14 +170,14 @@ namespace MultiPurposeProjectOptimizer
             this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.dataGridViewTextBoxColumn3.Text = "";
             // 
-            // button1
+            // AddInfluence
             // 
-            this.button1.Location = new System.Drawing.Point(359, 30);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(122, 33);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Добавить";
-            this.button1.UseVisualStyleBackColor = true;
+            this.AddInfluence.Location = new System.Drawing.Point(359, 30);
+            this.AddInfluence.Name = "AddInfluence";
+            this.AddInfluence.Size = new System.Drawing.Size(122, 33);
+            this.AddInfluence.TabIndex = 4;
+            this.AddInfluence.Text = "Добавить";
+            this.AddInfluence.UseVisualStyleBackColor = true;
             // 
             // ConfirmButton
             // 
@@ -210,7 +210,7 @@ namespace MultiPurposeProjectOptimizer
             this.Controls.Add(this.ConfirmButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.isMPPCheckbox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ProjectNameTextbox);
             this.Name = "ProjectAddAndEditForm";
@@ -233,12 +233,12 @@ namespace MultiPurposeProjectOptimizer
         private System.Windows.Forms.DataGridViewTextBoxColumn RowNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn PropertyName;
         private System.Windows.Forms.DataGridViewTextBoxColumn PropertyValue;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button AddProperty;
+        private System.Windows.Forms.CheckBox isMPPCheckbox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button AddInfluence;
         private System.Windows.Forms.Button ConfirmButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;

@@ -20,6 +20,14 @@ namespace MultiPurposeProjectOptimizer
             Project project2 = new Project(1, "bbb", new Dictionary<string, double>());
             Project project3 = new Project(2, "ccc", new Dictionary<string, double>());
             Projects = new List<Project>() { project1, project2, project3 };
+
+            DBManager.User = "USER-PC\\User";
+            DBManager.Password = "";
+            DBManager.DataSource = "USER-PC\\SQLEXPRESS";
+            //DBManager.DataSource = "localhost";
+            DBManager.InitialCatalog = "MPPOptimizerDB";
+            DBManager.IntegratedSecurity = true;
+            DBManager.ConnectToDB();
         }
 
         private void ProjectAndPropertiesButton_Click(object sender, EventArgs e)
