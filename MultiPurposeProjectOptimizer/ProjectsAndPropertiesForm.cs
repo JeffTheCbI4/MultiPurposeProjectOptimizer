@@ -33,6 +33,7 @@ namespace MultiPurposeProjectOptimizer
 
         private void ProjectsGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == ProjectsGrid.Rows.Count - 1) return;
             if (ProjectsGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
             {
                 this.Enabled = false;
@@ -40,7 +41,7 @@ namespace MultiPurposeProjectOptimizer
             }
         }
 
-        private void deleteProjectButton_Click(object sender, EventArgs e)
+        private void DeleteProjectButton_Click(object sender, EventArgs e)
         {
             int rowsCount = ProjectsGrid.SelectedRows.Count;
             for (int i = 0; i < rowsCount; i++)
@@ -58,8 +59,8 @@ namespace MultiPurposeProjectOptimizer
             for (int i = 0; i < projectsList.Count; i++)
             {
                 Dictionary<string, string> project = projectsList[i];
-                string isMPString = project["isMultiPurpose"] == "True" ? "Да" : "Нет";
-                ProjectsGrid.Rows.Add(project["projectId"], i + 1, project["projectName"], "Свойства", isMPString, "Влияние");
+                bool isMPString = project["isMultiPurpose"] == "True" ? true : false;
+                ProjectsGrid.Rows.Add(project["projectId"], i + 1, project["projectName"], isMPString);
             }
         }
 
@@ -92,12 +93,21 @@ namespace MultiPurposeProjectOptimizer
             e.Cancel = false;
             int rowIndex = e.RowIndex;
             var validatedCells = PropertiesGrid.Rows[rowIndex].Cells;
+            if (validatedCells["PropertyName"].Value == null ||
+                String.IsNullOrWhiteSpace(validatedCells["PropertyName"].Value.ToString()))
+            {
+                e.Cancel = true;
+                validatedCells["PropertyName"].ErrorText = "Имя не должно быть пустым";
+                return;
+            }
+
             DataGridViewRowCollection rows = PropertiesGrid.Rows;
 
             for (int i = 0; i < rows.Count - 1; i++)
             {
                 DataGridViewRow row = rows[i];
-                if (row.Cells["PropertyName"].Value.ToString() == validatedCells["PropertyName"].Value.ToString() && i != rowIndex)
+                if (row.Cells["PropertyName"].Value.ToString() == validatedCells["PropertyName"].Value.ToString()
+                    && i != rowIndex)
                 {
                     validatedCells["PropertyName"].ErrorText = "Имя должно быть уникальным";
                     e.Cancel = true;
@@ -114,8 +124,70 @@ namespace MultiPurposeProjectOptimizer
             {
                 string propertyName = currentRow.Cells["PropertyName"].Value.ToString();
                 DBManager.InsertProperty(propertyName);
-                RefreshProjectGrid();
+                currentRow.Cells["PropertyName"].ErrorText = "";
+                currentRow.Cells["RowNumber"].Value = currentRow.Index + 1;
+                int propertyId = int.Parse(DBManager.SelectPropertyByName(propertyName)[0]["propertyId"]);
+                currentRow.Cells["Id"].Value = propertyId;
             }
+        }
+
+        private void DeletePropertyButton_Click(object sender, EventArgs e)
+        {
+            int rowsCount = PropertiesGrid.SelectedRows.Count;
+            for (int i = 0; i < rowsCount; i++)
+            {
+                int removedId = int.Parse(PropertiesGrid.SelectedRows[i].Cells["Id"].Value.ToString());
+                DBManager.DeleteProperty(removedId);
+            }
+            RefreshPropertyGrid();
+        }
+
+        private void ProjectsGrid_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            e.Cancel = false;
+            int rowIndex = e.RowIndex;
+            var validatedCells = ProjectsGrid.Rows[rowIndex].Cells;
+            if (validatedCells["ProjectName"].Value == null ||
+                String.IsNullOrWhiteSpace(validatedCells["ProjectName"].Value.ToString()))
+            {
+                e.Cancel = true;
+                validatedCells["ProjectName"].ErrorText = "Имя не должно быть пустым";
+                return;
+            }
+
+            DataGridViewRowCollection rows = ProjectsGrid.Rows;
+
+            for (int i = 0; i < rows.Count - 1; i++)
+            {
+                DataGridViewRow row = rows[i];
+                if (row.Cells["ProjectName"].Value.ToString() == validatedCells["ProjectName"].Value.ToString()
+                    && i != rowIndex)
+                {
+                    validatedCells["ProjectName"].ErrorText = "Имя должно быть уникальным";
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void ProjectsGrid_RowValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow currentRow = ProjectsGrid.Rows[e.RowIndex];
+            //Если у строки нет Id - то операция добавления
+            //Иначе - операция обновления
+            if (currentRow.Cells["ProjectId"].Value == null)
+            {
+                string projectName = currentRow.Cells["ProjectName"].Value.ToString();
+                DBManager.InsertProject(projectName, 1, false);
+                currentRow.Cells["ProjectName"].ErrorText = "";
+                currentRow.Cells["ProjectRowNumber"].Value = currentRow.Index + 1;
+                int propertyId = int.Parse(DBManager.SelectProjectByName(projectName)[0]["projectId"]);
+                currentRow.Cells["ProjectId"].Value = propertyId;
+            }
+        }
+
+        private void ProjectPropertiesButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

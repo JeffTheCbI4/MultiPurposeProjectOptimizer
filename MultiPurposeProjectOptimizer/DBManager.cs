@@ -45,6 +45,14 @@ namespace MultiPurposeProjectOptimizer
             return projectsList;
         }
 
+        internal static List<Dictionary<string, string>> SelectProjectByName(string projectName)
+        {
+            string sql = string.Format("SELECT projectId, projectName FROM dbo.Project " +
+                "where projectName = '{0}'", projectName);
+            List<Dictionary<string, string>> propertiesList = executeReader(sql);
+            return propertiesList;
+        }
+
         internal static void InsertProject(string projectName, int directionId, bool isMPP)
         {
             int isMPPInt = isMPP ? 1 : 0;
@@ -60,6 +68,14 @@ namespace MultiPurposeProjectOptimizer
             return propertiesList;
         }
 
+        internal static List<Dictionary<string, string>> SelectPropertyByName(string propertyName)
+        {
+            string sql = string.Format("SELECT propertyId, propertyName FROM dbo.Property " +
+                "where propertyName = '{0}'", propertyName);
+            List<Dictionary<string, string>> propertiesList = executeReader(sql);
+            return propertiesList;
+        }
+
         internal static void InsertProperty(string propertyName)
         {
             string sql = string.Format("INSERT INTO dbo.Property (propertyName)" +
@@ -70,6 +86,12 @@ namespace MultiPurposeProjectOptimizer
         internal static void DeleteProject(int removedId)
         {
             string sql = string.Format("DELETE FROM dbo.Project WHERE projectId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
+        internal static void DeleteProperty(int removedId)
+        {
+            string sql = string.Format("DELETE FROM dbo.Property WHERE propertyId = {0}", removedId);
             executeNonQuery(sql);
         }
 
