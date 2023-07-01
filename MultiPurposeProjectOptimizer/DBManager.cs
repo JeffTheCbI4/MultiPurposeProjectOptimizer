@@ -38,9 +38,26 @@ namespace MultiPurposeProjectOptimizer
             return projectsList;
         }
 
+        internal static void InsertProjectProperty(int projectId, int propertyId, int propertyValue)
+        {
+            string sql = string.Format("INSERT INTO dbo.ProjectProperty (projectId, propertyId, propertyValue)" +
+                    "VALUES ('{0}', {1}, {2})", projectId, propertyId, propertyValue);
+            executeNonQuery(sql);
+        }
+
         internal static List<Dictionary<string, string>> SelectProjects(string searchPrompt)
         {
             string sql = "SELECT projectId, projectName, isMultiPurpose FROM dbo.Project";
+            List<Dictionary<string, string>> projectsList = executeReader(sql);
+            return projectsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectProjectProperty(int projectId)
+        {
+            string sql = string.Format("SELECT projectPropertyId, prop.propertyName, propertyValue FROM dbo.ProjectProperty pp " +
+                "inner join dbo.Property prop " +
+                "on PP.propertyId = prop.propertyId " +
+                "WHERE pp.projectId = {0}", projectId);
             List<Dictionary<string, string>> projectsList = executeReader(sql);
             return projectsList;
         }
@@ -76,6 +93,12 @@ namespace MultiPurposeProjectOptimizer
             return propertiesList;
         }
 
+        internal static void DeleteProjectProperty(int removedId)
+        {
+            string sql = string.Format("DELETE FROM dbo.ProjectProperty WHERE projectPropertyId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
         internal static void InsertProperty(string propertyName)
         {
             string sql = string.Format("INSERT INTO dbo.Property (propertyName)" +
@@ -92,6 +115,14 @@ namespace MultiPurposeProjectOptimizer
         internal static void DeleteProperty(int removedId)
         {
             string sql = string.Format("DELETE FROM dbo.Property WHERE propertyId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateProjectPropertyValue(int projectPropertyId, double value)
+        {
+            string sql = string.Format("UPDATE dbo.ProjectProperty " +
+                "SET propertyValue = {0} " +
+                "WHERE projectPropertyId = {1}", value, projectPropertyId);
             executeNonQuery(sql);
         }
 

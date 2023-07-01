@@ -187,7 +187,21 @@ namespace MultiPurposeProjectOptimizer
 
         private void ProjectPropertiesButton_Click(object sender, EventArgs e)
         {
-
+            int selectedRowsCount = ProjectsGrid.SelectedRows.Count;
+            if (selectedRowsCount == 0)
+            {
+                MessageBox.Show("Не выбрана строка проекта",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            } else if (selectedRowsCount > 1)
+            {
+                MessageBox.Show("Выбрано больше одного проекта",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int projectId = int.Parse(ProjectsGrid.SelectedRows[0].Cells["ProjectId"].Value.ToString());
+            this.Enabled = false;
+            new ProjectPropertiesEditForm(this, projectId).Show();
         }
     }
 }

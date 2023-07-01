@@ -194,6 +194,12 @@
     <Compile Include="EditInfluenceForm.Designer.cs">
       <DependentUpon>EditInfluenceForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProjectPropertiesEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProjectPropertiesEditForm.Designer.cs">
+      <DependentUpon>ProjectPropertiesEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OptimalProjectListForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +242,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditInfluenceForm.resx">
       <DependentUpon>EditInfluenceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProjectPropertiesEditForm.resx">
+      <DependentUpon>ProjectPropertiesEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OptimalProjectListForm.resx">
       <DependentUpon>OptimalProjectListForm.cs</DependentUpon>
