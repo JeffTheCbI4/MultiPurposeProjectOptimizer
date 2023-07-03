@@ -113,6 +113,8 @@ namespace MultiPurposeProjectOptimizer
             // 
             // PropertiesGrid
             // 
+            this.PropertiesGrid.AllowUserToAddRows = false;
+            this.PropertiesGrid.AllowUserToDeleteRows = false;
             this.PropertiesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.PropertiesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PropertyId,
@@ -145,6 +147,8 @@ namespace MultiPurposeProjectOptimizer
             // 
             // ProjectPropertyGrid
             // 
+            this.ProjectPropertyGrid.AllowUserToAddRows = false;
+            this.ProjectPropertyGrid.AllowUserToDeleteRows = false;
             this.ProjectPropertyGrid.CausesValidation = false;
             this.ProjectPropertyGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ProjectPropertyGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {

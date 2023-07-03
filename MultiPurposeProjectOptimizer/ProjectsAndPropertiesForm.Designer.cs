@@ -30,26 +30,25 @@ namespace MultiPurposeProjectOptimizer
         private void InitializeComponent()
         {
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.InfluencesButton = new System.Windows.Forms.Button();
+            this.ProjectPropertiesButton = new System.Windows.Forms.Button();
             this.SearchProjectTextBox = new System.Windows.Forms.TextBox();
             this.button8 = new System.Windows.Forms.Button();
             this.deleteProjectButton = new System.Windows.Forms.Button();
             this.ProjectsGrid = new System.Windows.Forms.DataGridView();
+            this.ProjectId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ProjectRowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ProjectName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IsMultiPurpose = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.DeletePropertyButton = new System.Windows.Forms.Button();
             this.PropertiesGrid = new System.Windows.Forms.DataGridView();
-            this.backButton = new System.Windows.Forms.Button();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ProjectAddButton = new System.Windows.Forms.Button();
-            this.ProjectPropertiesButton = new System.Windows.Forms.Button();
-            this.InfluencesButton = new System.Windows.Forms.Button();
-            this.ProjectId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ProjectRowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ProjectName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IsMultiPurpose = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.backButton = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ProjectsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -63,7 +62,6 @@ namespace MultiPurposeProjectOptimizer
             this.groupBox2.Controls.Add(this.SearchProjectTextBox);
             this.groupBox2.Controls.Add(this.button8);
             this.groupBox2.Controls.Add(this.deleteProjectButton);
-            this.groupBox2.Controls.Add(this.ProjectAddButton);
             this.groupBox2.Controls.Add(this.ProjectsGrid);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
@@ -71,6 +69,26 @@ namespace MultiPurposeProjectOptimizer
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Проекты";
+            // 
+            // InfluencesButton
+            // 
+            this.InfluencesButton.Location = new System.Drawing.Point(555, 77);
+            this.InfluencesButton.Name = "InfluencesButton";
+            this.InfluencesButton.Size = new System.Drawing.Size(97, 23);
+            this.InfluencesButton.TabIndex = 9;
+            this.InfluencesButton.Text = "Связи";
+            this.InfluencesButton.UseVisualStyleBackColor = true;
+            this.InfluencesButton.Click += new System.EventHandler(this.InfluencesButton_Click);
+            // 
+            // ProjectPropertiesButton
+            // 
+            this.ProjectPropertiesButton.Location = new System.Drawing.Point(555, 48);
+            this.ProjectPropertiesButton.Name = "ProjectPropertiesButton";
+            this.ProjectPropertiesButton.Size = new System.Drawing.Size(97, 23);
+            this.ProjectPropertiesButton.TabIndex = 8;
+            this.ProjectPropertiesButton.Text = "Свойства";
+            this.ProjectPropertiesButton.UseVisualStyleBackColor = true;
+            this.ProjectPropertiesButton.Click += new System.EventHandler(this.ProjectPropertiesButton_Click);
             // 
             // SearchProjectTextBox
             // 
@@ -111,9 +129,35 @@ namespace MultiPurposeProjectOptimizer
             this.ProjectsGrid.Name = "ProjectsGrid";
             this.ProjectsGrid.Size = new System.Drawing.Size(543, 150);
             this.ProjectsGrid.TabIndex = 1;
-            this.ProjectsGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ProjectsGrid_CellContentClick);
+            this.ProjectsGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.ProjectsGrid_CellValueChanged);
             this.ProjectsGrid.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.ProjectsGrid_RowValidated);
             this.ProjectsGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.ProjectsGrid_RowValidating);
+            // 
+            // ProjectId
+            // 
+            this.ProjectId.HeaderText = "ProjectId";
+            this.ProjectId.Name = "ProjectId";
+            this.ProjectId.ReadOnly = true;
+            this.ProjectId.Visible = false;
+            // 
+            // ProjectRowNumber
+            // 
+            this.ProjectRowNumber.HeaderText = "№";
+            this.ProjectRowNumber.Name = "ProjectRowNumber";
+            this.ProjectRowNumber.ReadOnly = true;
+            // 
+            // ProjectName
+            // 
+            this.ProjectName.HeaderText = "Название проекта";
+            this.ProjectName.Name = "ProjectName";
+            // 
+            // IsMultiPurpose
+            // 
+            this.IsMultiPurpose.HeaderText = "Многоцелевой проект";
+            this.IsMultiPurpose.Name = "IsMultiPurpose";
+            this.IsMultiPurpose.ReadOnly = true;
+            this.IsMultiPurpose.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.IsMultiPurpose.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // groupBox1
             // 
@@ -168,17 +212,6 @@ namespace MultiPurposeProjectOptimizer
             this.PropertiesGrid.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.PropertiesGrid_RowValidated);
             this.PropertiesGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.PropertiesGrid_RowValidating);
             // 
-            // backButton
-            // 
-            this.backButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.backButton.Location = new System.Drawing.Point(530, 420);
-            this.backButton.Name = "backButton";
-            this.backButton.Size = new System.Drawing.Size(147, 40);
-            this.backButton.TabIndex = 8;
-            this.backButton.Text = "Назад";
-            this.backButton.UseVisualStyleBackColor = true;
-            this.backButton.Click += new System.EventHandler(this.backButton_Click);
-            // 
             // Id
             // 
             this.Id.HeaderText = "Id";
@@ -197,60 +230,16 @@ namespace MultiPurposeProjectOptimizer
             this.PropertyName.HeaderText = "Название свойства";
             this.PropertyName.Name = "PropertyName";
             // 
-            // ProjectAddButton
+            // backButton
             // 
-            this.ProjectAddButton.Location = new System.Drawing.Point(555, 49);
-            this.ProjectAddButton.Name = "ProjectAddButton";
-            this.ProjectAddButton.Size = new System.Drawing.Size(97, 23);
-            this.ProjectAddButton.TabIndex = 3;
-            this.ProjectAddButton.Text = "Добавить";
-            this.ProjectAddButton.UseVisualStyleBackColor = true;
-            this.ProjectAddButton.Click += new System.EventHandler(this.ProjectAddButton_Click);
-            // 
-            // ProjectPropertiesButton
-            // 
-            this.ProjectPropertiesButton.Location = new System.Drawing.Point(555, 78);
-            this.ProjectPropertiesButton.Name = "ProjectPropertiesButton";
-            this.ProjectPropertiesButton.Size = new System.Drawing.Size(97, 23);
-            this.ProjectPropertiesButton.TabIndex = 8;
-            this.ProjectPropertiesButton.Text = "Свойства";
-            this.ProjectPropertiesButton.UseVisualStyleBackColor = true;
-            this.ProjectPropertiesButton.Click += new System.EventHandler(this.ProjectPropertiesButton_Click);
-            // 
-            // InfluencesButton
-            // 
-            this.InfluencesButton.Location = new System.Drawing.Point(555, 107);
-            this.InfluencesButton.Name = "InfluencesButton";
-            this.InfluencesButton.Size = new System.Drawing.Size(97, 23);
-            this.InfluencesButton.TabIndex = 9;
-            this.InfluencesButton.Text = "Связи";
-            this.InfluencesButton.UseVisualStyleBackColor = true;
-            // 
-            // ProjectId
-            // 
-            this.ProjectId.HeaderText = "ProjectId";
-            this.ProjectId.Name = "ProjectId";
-            this.ProjectId.ReadOnly = true;
-            this.ProjectId.Visible = false;
-            // 
-            // ProjectRowNumber
-            // 
-            this.ProjectRowNumber.HeaderText = "№";
-            this.ProjectRowNumber.Name = "ProjectRowNumber";
-            this.ProjectRowNumber.ReadOnly = true;
-            // 
-            // ProjectName
-            // 
-            this.ProjectName.HeaderText = "Название проекта";
-            this.ProjectName.Name = "ProjectName";
-            // 
-            // IsMultiPurpose
-            // 
-            this.IsMultiPurpose.HeaderText = "Многоцелевой проект";
-            this.IsMultiPurpose.Name = "IsMultiPurpose";
-            this.IsMultiPurpose.ReadOnly = true;
-            this.IsMultiPurpose.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.IsMultiPurpose.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.backButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.backButton.Location = new System.Drawing.Point(530, 420);
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(147, 40);
+            this.backButton.TabIndex = 8;
+            this.backButton.Text = "Назад";
+            this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
             // ProjectsAndPropertiesForm
             // 
@@ -289,7 +278,6 @@ namespace MultiPurposeProjectOptimizer
         private System.Windows.Forms.DataGridViewTextBoxColumn Id;
         private System.Windows.Forms.DataGridViewTextBoxColumn RowNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn PropertyName;
-        private System.Windows.Forms.Button ProjectAddButton;
         private System.Windows.Forms.Button InfluencesButton;
         private System.Windows.Forms.Button ProjectPropertiesButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn ProjectId;

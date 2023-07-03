@@ -52,12 +52,33 @@ namespace MultiPurposeProjectOptimizer
             return projectsList;
         }
 
-        internal static List<Dictionary<string, string>> SelectProjectProperty(int projectId)
+        internal static List<Dictionary<string, string>> SelectProjectProperties(int projectId)
         {
             string sql = string.Format("SELECT projectPropertyId, prop.propertyName, propertyValue FROM dbo.ProjectProperty pp " +
                 "inner join dbo.Property prop " +
-                "on PP.propertyId = prop.propertyId " +
+                "on pp.propertyId = prop.propertyId " +
                 "WHERE pp.projectId = {0}", projectId);
+            List<Dictionary<string, string>> projectsList = executeReader(sql);
+            return projectsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectInfluences(int projectId)
+        {
+            string sql = string.Format("select i.influenceId, " +
+                "proj.projectId, " +
+                "proj.projectName, " +
+                "i.projectPropertyId, " +
+                "prop.propertyId, " +
+                "prop.propertyName, " +
+                "i.influenceValue " +
+                "from dbo.Influence i " +
+                "inner join dbo.ProjectProperty pp " +
+                "on i.projectPropertyId = pp.projectPropertyId " +
+                "inner join dbo.Property prop " +
+                "on pp.propertyId = prop.propertyId " +
+                "inner join dbo.Project proj " +
+                "on pp.projectId = proj.projectId " +
+                "where i.projectId = {0}", projectId);
             List<Dictionary<string, string>> projectsList = executeReader(sql);
             return projectsList;
         }
@@ -99,6 +120,13 @@ namespace MultiPurposeProjectOptimizer
             executeNonQuery(sql);
         }
 
+        internal static void InsertInfluence(int influencingProjectId, int projectPropertyId, int influenceValue)
+        {
+            string sql = string.Format("INSERT INTO dbo.Influence (projectId, projectPropertyId, influenceValue)" +
+                    "VALUES ({0}, {1}, {2})", influencingProjectId, projectPropertyId, influenceValue);
+            executeNonQuery(sql);
+        }
+
         internal static void InsertProperty(string propertyName)
         {
             string sql = string.Format("INSERT INTO dbo.Property (propertyName)" +
@@ -118,11 +146,42 @@ namespace MultiPurposeProjectOptimizer
             executeNonQuery(sql);
         }
 
+        internal static void DeleteInfluence(int removedId)
+        {
+            string sql = string.Format("DELETE FROM dbo.Influence WHERE influenceId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateProjectName(string projectName, int projectId)
+        {
+            string sql = string.Format("UPDATE dbo.Project " +
+                "SET projectName = '{0}' " +
+                "WHERE projectId = {1}", projectName, projectId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateProjectIsMPP(int projectId, bool isMPP)
+        {
+            int intIsMPP = isMPP ? 1 : 0;
+            string sql = string.Format("UPDATE dbo.Project " +
+                "SET isMultiPurpose = {0} " +
+                "WHERE projectId = {1}", intIsMPP, projectId);
+            executeNonQuery(sql);
+        }
+
         internal static void UpdateProjectPropertyValue(int projectPropertyId, double value)
         {
             string sql = string.Format("UPDATE dbo.ProjectProperty " +
-                "SET propertyValue = {0} " +
+                "SET propertyValue = '{0}' " +
                 "WHERE projectPropertyId = {1}", value, projectPropertyId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateInfluenceValue(double influenceValue, int influenceId)
+        {
+            string sql = string.Format("UPDATE dbo.Influence " +
+                "SET influenceValue = '{0}' " +
+                "WHERE influenceId = {1}", influenceValue, influenceId);
             executeNonQuery(sql);
         }
 

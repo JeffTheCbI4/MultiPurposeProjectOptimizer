@@ -73,7 +73,7 @@ namespace MultiPurposeProjectOptimizer
         {
             backgroundUpdatingStatus = true;
             ProjectPropertyGrid.Rows.Clear();
-            List<Dictionary<string, string>> propertiesList = DBManager.SelectProjectProperty(projectId);
+            List<Dictionary<string, string>> propertiesList = DBManager.SelectProjectProperties(projectId);
             for (int i = 0; i < propertiesList.Count; i++)
             {
                 Dictionary<string, string> property = propertiesList[i];
@@ -107,7 +107,7 @@ namespace MultiPurposeProjectOptimizer
         private void ProjectPropertyGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (backgroundUpdatingStatus 
-                || ProjectPropertyGrid.Rows[e.RowIndex].Cells["ProjectPropertyid"].Value == null) return;
+                || ProjectPropertyGrid.Rows[e.RowIndex].Cells["ProjectPropertyId"].Value == null) return;
             object value = ProjectPropertyGrid.Rows[e.RowIndex].Cells["ProjectPropertyValue"].Value;
             double doubleValue;
             if (value == null || !double.TryParse(value.ToString(), out doubleValue) || doubleValue < 0)

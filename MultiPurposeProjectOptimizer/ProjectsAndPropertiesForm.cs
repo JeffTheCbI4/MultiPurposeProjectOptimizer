@@ -13,6 +13,7 @@ namespace MultiPurposeProjectOptimizer
     public partial class ProjectsAndPropertiesForm : Form
     {
         MainMenuForm MainMenu;
+        bool backgroundUpdatingStatus = true;
         public ProjectsAndPropertiesForm(MainMenuForm mainMenu)
         {
             InitializeComponent();
@@ -31,18 +32,11 @@ namespace MultiPurposeProjectOptimizer
             MainMenu.Show();
         }
 
-        private void ProjectsGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex == ProjectsGrid.Rows.Count - 1) return;
-            if (ProjectsGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
-            {
-                this.Enabled = false;
-                new ProjectAddAndEditForm(this, MainMenu.Projects).Show();
-            }
-        }
-
         private void DeleteProjectButton_Click(object sender, EventArgs e)
         {
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить выделенные проекты?",
+                                "Удалить проекты", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Cancel) return;
             int rowsCount = ProjectsGrid.SelectedRows.Count;
             for (int i = 0; i < rowsCount; i++)
             {
@@ -54,6 +48,7 @@ namespace MultiPurposeProjectOptimizer
 
         public void RefreshProjectGrid()
         {
+            backgroundUpdatingStatus = true;
             ProjectsGrid.Rows.Clear();
             List<Dictionary<string,string>> projectsList = DBManager.SelectProjects();
             for (int i = 0; i < projectsList.Count; i++)
@@ -62,6 +57,7 @@ namespace MultiPurposeProjectOptimizer
                 bool isMPString = project["isMultiPurpose"] == "True" ? true : false;
                 ProjectsGrid.Rows.Add(project["projectId"], i + 1, project["projectName"], isMPString);
             }
+            backgroundUpdatingStatus = false;
         }
 
         private void ProjectAddButton_Click(object sender, EventArgs e)
@@ -72,6 +68,7 @@ namespace MultiPurposeProjectOptimizer
 
         public void RefreshPropertyGrid()
         {
+            backgroundUpdatingStatus = true;
             PropertiesGrid.Rows.Clear();
             List<Dictionary<string, string>> propertiesList = DBManager.SelectProperty();
             for (int i = 0; i < propertiesList.Count; i++)
@@ -79,6 +76,7 @@ namespace MultiPurposeProjectOptimizer
                 Dictionary<string, string> property = propertiesList[i];
                 PropertiesGrid.Rows.Add(property["propertyId"], i + 1, property["propertyName"]);
             }
+            backgroundUpdatingStatus = false;
         }
 
         private void AddPropertyButton_Click(object sender, EventArgs e)
@@ -133,6 +131,9 @@ namespace MultiPurposeProjectOptimizer
 
         private void DeletePropertyButton_Click(object sender, EventArgs e)
         {
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите удалить выделенные свойства?",
+                                "Удалить свойства", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Cancel) return;
             int rowsCount = PropertiesGrid.SelectedRows.Count;
             for (int i = 0; i < rowsCount; i++)
             {
@@ -174,14 +175,22 @@ namespace MultiPurposeProjectOptimizer
             DataGridViewRow currentRow = ProjectsGrid.Rows[e.RowIndex];
             //Если у строки нет Id - то операция добавления
             //Иначе - операция обновления
-            if (currentRow.Cells["ProjectId"].Value == null)
+            try
             {
-                string projectName = currentRow.Cells["ProjectName"].Value.ToString();
-                DBManager.InsertProject(projectName, 1, false);
-                currentRow.Cells["ProjectName"].ErrorText = "";
-                currentRow.Cells["ProjectRowNumber"].Value = currentRow.Index + 1;
-                int propertyId = int.Parse(DBManager.SelectProjectByName(projectName)[0]["projectId"]);
-                currentRow.Cells["ProjectId"].Value = propertyId;
+                if (currentRow.Cells["ProjectId"].Value == null)
+                {
+                    string projectName = currentRow.Cells["ProjectName"].Value.ToString();
+                    DBManager.InsertProject(projectName, 1, false);
+                    currentRow.Cells["ProjectName"].ErrorText = "";
+                    currentRow.Cells["ProjectRowNumber"].Value = currentRow.Index + 1;
+                    int propertyId = int.Parse(DBManager.SelectProjectByName(projectName)[0]["projectId"]);
+                    currentRow.Cells["ProjectId"].Value = propertyId;
+                }
+            } catch (Exception exception)
+            {
+                MessageBox.Show("Непредвиденная ошибка при валидации таблицы проектов\n" +
+                    exception.Message,
+                                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -202,6 +211,40 @@ namespace MultiPurposeProjectOptimizer
             int projectId = int.Parse(ProjectsGrid.SelectedRows[0].Cells["ProjectId"].Value.ToString());
             this.Enabled = false;
             new ProjectPropertiesEditForm(this, projectId).Show();
+        }
+
+        private void ProjectsGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (backgroundUpdatingStatus || 
+                ProjectsGrid.Rows[e.RowIndex].Cells["ProjectId"].Value == null) return;
+            DataGridViewRow currentRow = ProjectsGrid.Rows[e.RowIndex];
+            if (currentRow.Cells["ProjectId"].Value != null &&
+                int.TryParse(currentRow.Cells["ProjectId"].Value.ToString(), out int projectId))
+            {
+                string projectName = currentRow.Cells["ProjectName"].Value.ToString();
+                DBManager.UpdateProjectName(projectName, projectId);
+                currentRow.Cells["ProjectName"].ErrorText = "";
+            }
+        }
+
+        private void InfluencesButton_Click(object sender, EventArgs e)
+        {
+            int selectedRowsCount = ProjectsGrid.SelectedRows.Count;
+            if (selectedRowsCount == 0)
+            {
+                MessageBox.Show("Не выбрана строка проекта",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (selectedRowsCount > 1)
+            {
+                MessageBox.Show("Выбрано больше одного проекта",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int projectId = int.Parse(ProjectsGrid.SelectedRows[0].Cells["ProjectId"].Value.ToString());
+            this.Enabled = false;
+            new EditInfluenceForm(this, projectId).Show();
         }
     }
 }
