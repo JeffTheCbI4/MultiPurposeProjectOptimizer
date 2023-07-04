@@ -13,7 +13,7 @@ namespace MultiPurposeProjectOptimizer
     public partial class ProjectsAndPropertiesForm : Form
     {
         MainMenuForm MainMenu;
-        bool backgroundUpdatingStatus = true;
+        bool BackgroundUpdatingStatus = true;
         public ProjectsAndPropertiesForm(MainMenuForm mainMenu)
         {
             InitializeComponent();
@@ -48,7 +48,7 @@ namespace MultiPurposeProjectOptimizer
 
         public void RefreshProjectGrid()
         {
-            backgroundUpdatingStatus = true;
+            BackgroundUpdatingStatus = true;
             ProjectsGrid.Rows.Clear();
             List<Dictionary<string,string>> projectsList = DBManager.SelectProjects();
             for (int i = 0; i < projectsList.Count; i++)
@@ -57,7 +57,7 @@ namespace MultiPurposeProjectOptimizer
                 bool isMPString = project["isMultiPurpose"] == "True" ? true : false;
                 ProjectsGrid.Rows.Add(project["projectId"], i + 1, project["projectName"], isMPString);
             }
-            backgroundUpdatingStatus = false;
+            BackgroundUpdatingStatus = false;
         }
 
         private void ProjectAddButton_Click(object sender, EventArgs e)
@@ -68,7 +68,7 @@ namespace MultiPurposeProjectOptimizer
 
         public void RefreshPropertyGrid()
         {
-            backgroundUpdatingStatus = true;
+            BackgroundUpdatingStatus = true;
             PropertiesGrid.Rows.Clear();
             List<Dictionary<string, string>> propertiesList = DBManager.SelectProperty();
             for (int i = 0; i < propertiesList.Count; i++)
@@ -76,7 +76,7 @@ namespace MultiPurposeProjectOptimizer
                 Dictionary<string, string> property = propertiesList[i];
                 PropertiesGrid.Rows.Add(property["propertyId"], i + 1, property["propertyName"]);
             }
-            backgroundUpdatingStatus = false;
+            BackgroundUpdatingStatus = false;
         }
 
         private void AddPropertyButton_Click(object sender, EventArgs e)
@@ -174,7 +174,6 @@ namespace MultiPurposeProjectOptimizer
         {
             DataGridViewRow currentRow = ProjectsGrid.Rows[e.RowIndex];
             //Если у строки нет Id - то операция добавления
-            //Иначе - операция обновления
             try
             {
                 if (currentRow.Cells["ProjectId"].Value == null)
@@ -215,7 +214,7 @@ namespace MultiPurposeProjectOptimizer
 
         private void ProjectsGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (backgroundUpdatingStatus || 
+            if (BackgroundUpdatingStatus || 
                 ProjectsGrid.Rows[e.RowIndex].Cells["ProjectId"].Value == null) return;
             DataGridViewRow currentRow = ProjectsGrid.Rows[e.RowIndex];
             if (currentRow.Cells["ProjectId"].Value != null &&

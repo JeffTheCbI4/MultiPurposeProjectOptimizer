@@ -34,8 +34,8 @@ namespace MultiPurposeProjectOptimizer
         internal static List<Dictionary<string, string>> SelectProjects()
         {
             string sql = "SELECT projectId, projectName, isMultiPurpose FROM dbo.Project";
-            List<Dictionary<string, string>> projectsList = executeReader(sql);
-            return projectsList;
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static void InsertProjectProperty(int projectId, int propertyId, int propertyValue)
@@ -48,8 +48,8 @@ namespace MultiPurposeProjectOptimizer
         internal static List<Dictionary<string, string>> SelectProjects(string searchPrompt)
         {
             string sql = "SELECT projectId, projectName, isMultiPurpose FROM dbo.Project";
-            List<Dictionary<string, string>> projectsList = executeReader(sql);
-            return projectsList;
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static List<Dictionary<string, string>> SelectProjectProperties(int projectId)
@@ -58,8 +58,8 @@ namespace MultiPurposeProjectOptimizer
                 "inner join dbo.Property prop " +
                 "on pp.propertyId = prop.propertyId " +
                 "WHERE pp.projectId = {0}", projectId);
-            List<Dictionary<string, string>> projectsList = executeReader(sql);
-            return projectsList;
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static List<Dictionary<string, string>> SelectInfluences(int projectId)
@@ -79,16 +79,31 @@ namespace MultiPurposeProjectOptimizer
                 "inner join dbo.Project proj " +
                 "on pp.projectId = proj.projectId " +
                 "where i.projectId = {0}", projectId);
-            List<Dictionary<string, string>> projectsList = executeReader(sql);
-            return projectsList;
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static List<Dictionary<string, string>> SelectProjectByName(string projectName)
         {
             string sql = string.Format("SELECT projectId, projectName FROM dbo.Project " +
                 "where projectName = '{0}'", projectName);
-            List<Dictionary<string, string>> propertiesList = executeReader(sql);
-            return propertiesList;
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectSolverInputsSet()
+        {
+            string sql = string.Format("SELECT solverInputsSetId, setName, solutionQuantityCap FROM dbo.SolverInputsSet");
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectSolverInputsSetByName(string setName)
+        {
+            string sql = string.Format("SELECT solverInputsSetId, setName, solutionQuantityCap FROM dbo.SolverInputsSet " +
+                "where setName = '{0}'", setName);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static void InsertProject(string projectName, int directionId, bool isMPP)
@@ -102,16 +117,16 @@ namespace MultiPurposeProjectOptimizer
         internal static List<Dictionary<string, string>> SelectProperty()
         {
             string sql = "SELECT propertyId, propertyName FROM dbo.Property";
-            List<Dictionary<string, string>> propertiesList = executeReader(sql);
-            return propertiesList;
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static List<Dictionary<string, string>> SelectPropertyByName(string propertyName)
         {
             string sql = string.Format("SELECT propertyId, propertyName FROM dbo.Property " +
                 "where propertyName = '{0}'", propertyName);
-            List<Dictionary<string, string>> propertiesList = executeReader(sql);
-            return propertiesList;
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static void DeleteProjectProperty(int removedId)
@@ -134,6 +149,13 @@ namespace MultiPurposeProjectOptimizer
             executeNonQuery(sql);
         }
 
+        internal static void InsertSolverInputsSet(int mode, string setName, int solutionQuantityCap)
+        {
+            string sql = string.Format("INSERT INTO dbo.SolverInputsSet (modeId, setName, solutionQuantityCap)" +
+                    "VALUES ({0}, '{1}', {2})", mode, setName, solutionQuantityCap);
+            executeNonQuery(sql);
+        }
+
         internal static void DeleteProject(int removedId)
         {
             string sql = string.Format("DELETE FROM dbo.Project WHERE projectId = {0}", removedId);
@@ -149,6 +171,12 @@ namespace MultiPurposeProjectOptimizer
         internal static void DeleteInfluence(int removedId)
         {
             string sql = string.Format("DELETE FROM dbo.Influence WHERE influenceId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
+        internal static void DeleteSolverInputsSet(int removedId)
+        {
+            string sql = string.Format("DELETE FROM dbo.SolverInputsSet WHERE solverInputsSetId = {0}", removedId);
             executeNonQuery(sql);
         }
 
@@ -182,6 +210,15 @@ namespace MultiPurposeProjectOptimizer
             string sql = string.Format("UPDATE dbo.Influence " +
                 "SET influenceValue = '{0}' " +
                 "WHERE influenceId = {1}", influenceValue, influenceId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateSolverInputsSet(string setName, int solutionQuantityCap, int solverInputsSetId)
+        {
+            string sql = string.Format("UPDATE dbo.SolverInputsSet " +
+                "SET setName = '{0}', " +
+                "solutionQuantityCap = {1} " +
+                "WHERE solverInputsSetId = {2}", setName, solutionQuantityCap, solverInputsSetId);
             executeNonQuery(sql);
         }
 
