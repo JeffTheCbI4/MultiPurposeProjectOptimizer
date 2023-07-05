@@ -117,7 +117,6 @@ namespace MultiPurposeProjectOptimizer
         {
             DataGridViewRow currentRow = PropertiesGrid.Rows[e.RowIndex];
             //Если у строки нет Id - то операция добавления
-            //Иначе - операция обновления
             if (currentRow.Cells["Id"].Value == null)
             {
                 string propertyName = currentRow.Cells["PropertyName"].Value.ToString();

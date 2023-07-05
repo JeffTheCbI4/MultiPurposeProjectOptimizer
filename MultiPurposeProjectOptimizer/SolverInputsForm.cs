@@ -148,5 +148,25 @@ namespace MultiPurposeProjectOptimizer
                 currentRow.Cells["SolutionQuantityCap"].ErrorText = "";
             }
         }
+
+        private void CapsButton_Click(object sender, EventArgs e)
+        {
+            int selectedRowsCount = SolverInputsGrid.SelectedRows.Count;
+            if (selectedRowsCount == 0)
+            {
+                MessageBox.Show("Не выбрана строка задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (selectedRowsCount > 1)
+            {
+                MessageBox.Show("Выбрано больше одной задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
+            this.Enabled = false;
+            new EditCapsForm(this, solverInputsSetId).Show();
+        }
     }
 }

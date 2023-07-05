@@ -31,16 +31,16 @@ namespace MultiPurposeProjectOptimizer
         {
             this.SolveButton = new System.Windows.Forms.Button();
             this.SolverInputsGrid = new System.Windows.Forms.DataGridView();
+            this.SolverInputsSetId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.solutionQuantityCap = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button3 = new System.Windows.Forms.Button();
             this.InitialProjectsButton = new System.Windows.Forms.Button();
             this.CapsButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.backButton = new System.Windows.Forms.Button();
-            this.SolverInputsSetId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.solutionQuantityCap = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.SolverInputsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -72,6 +72,29 @@ namespace MultiPurposeProjectOptimizer
             this.SolverInputsGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.SolverInputsGrid_CellValueChanged);
             this.SolverInputsGrid.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.SolverInputsGrid_RowValidated);
             this.SolverInputsGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.SolverInputsGrid_RowValidating);
+            // 
+            // SolverInputsSetId
+            // 
+            this.SolverInputsSetId.HeaderText = "SolverSetId";
+            this.SolverInputsSetId.Name = "SolverInputsSetId";
+            this.SolverInputsSetId.ReadOnly = true;
+            this.SolverInputsSetId.Visible = false;
+            // 
+            // RowNumber
+            // 
+            this.RowNumber.HeaderText = "№";
+            this.RowNumber.Name = "RowNumber";
+            this.RowNumber.ReadOnly = true;
+            // 
+            // SetName
+            // 
+            this.SetName.HeaderText = "Название задачи";
+            this.SetName.Name = "SetName";
+            // 
+            // solutionQuantityCap
+            // 
+            this.solutionQuantityCap.HeaderText = "Ограничение на количество решений";
+            this.solutionQuantityCap.Name = "solutionQuantityCap";
             // 
             // groupBox1
             // 
@@ -114,6 +137,7 @@ namespace MultiPurposeProjectOptimizer
             this.CapsButton.TabIndex = 6;
             this.CapsButton.Text = "Ограничения";
             this.CapsButton.UseVisualStyleBackColor = true;
+            this.CapsButton.Click += new System.EventHandler(this.CapsButton_Click);
             // 
             // DeleteButton
             // 
@@ -134,29 +158,6 @@ namespace MultiPurposeProjectOptimizer
             this.backButton.Text = "Назад";
             this.backButton.UseVisualStyleBackColor = true;
             this.backButton.Click += new System.EventHandler(this.BackButton_Click);
-            // 
-            // SolverInputsSetId
-            // 
-            this.SolverInputsSetId.HeaderText = "SolverSetId";
-            this.SolverInputsSetId.Name = "SolverInputsSetId";
-            this.SolverInputsSetId.ReadOnly = true;
-            this.SolverInputsSetId.Visible = false;
-            // 
-            // RowNumber
-            // 
-            this.RowNumber.HeaderText = "№";
-            this.RowNumber.Name = "RowNumber";
-            this.RowNumber.ReadOnly = true;
-            // 
-            // SetName
-            // 
-            this.SetName.HeaderText = "Название задачи";
-            this.SetName.Name = "SetName";
-            // 
-            // solutionQuantityCap
-            // 
-            this.solutionQuantityCap.HeaderText = "Ограничение на количество решений";
-            this.solutionQuantityCap.Name = "solutionQuantityCap";
             // 
             // SolverInputsForm
             // 

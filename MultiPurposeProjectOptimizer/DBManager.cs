@@ -38,11 +38,20 @@ namespace MultiPurposeProjectOptimizer
             return rowsList;
         }
 
-        internal static void InsertProjectProperty(int projectId, int propertyId, int propertyValue)
+        internal static List<Dictionary<string, string>> SelectPropertyCap(int solverInputsSetId)
         {
-            string sql = string.Format("INSERT INTO dbo.ProjectProperty (projectId, propertyId, propertyValue)" +
-                    "VALUES ('{0}', {1}, {2})", projectId, propertyId, propertyValue);
-            executeNonQuery(sql);
+            string sql = string.Format("SELECT " +
+                "propertyCapId, " +
+                "solverInputsSetId, " +
+                "pc.propertyId, " +
+                "p.propertyName, " +
+                "capValue " +
+                "FROM dbo.PropertyCap pc " +
+                "inner join dbo.Property p " +
+                "on pc.propertyId = p.propertyId " +
+                "where pc.solverInputsSetId = {0}", solverInputsSetId);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static List<Dictionary<string, string>> SelectProjects(string searchPrompt)
@@ -129,12 +138,6 @@ namespace MultiPurposeProjectOptimizer
             return rowsList;
         }
 
-        internal static void DeleteProjectProperty(int removedId)
-        {
-            string sql = string.Format("DELETE FROM dbo.ProjectProperty WHERE projectPropertyId = {0}", removedId);
-            executeNonQuery(sql);
-        }
-
         internal static void InsertInfluence(int influencingProjectId, int projectPropertyId, int influenceValue)
         {
             string sql = string.Format("INSERT INTO dbo.Influence (projectId, projectPropertyId, influenceValue)" +
@@ -149,10 +152,24 @@ namespace MultiPurposeProjectOptimizer
             executeNonQuery(sql);
         }
 
+        internal static void InsertProjectProperty(int projectId, int propertyId, int propertyValue)
+        {
+            string sql = string.Format("INSERT INTO dbo.ProjectProperty (projectId, propertyId, propertyValue)" +
+                    "VALUES ('{0}', {1}, {2})", projectId, propertyId, propertyValue);
+            executeNonQuery(sql);
+        }
+
         internal static void InsertSolverInputsSet(int mode, string setName, int solutionQuantityCap)
         {
             string sql = string.Format("INSERT INTO dbo.SolverInputsSet (modeId, setName, solutionQuantityCap)" +
                     "VALUES ({0}, '{1}', {2})", mode, setName, solutionQuantityCap);
+            executeNonQuery(sql);
+        }
+
+        internal static void InsertPropertyCap(int solverInputsSetId, int propertyId, int capValue)
+        {
+            string sql = string.Format("INSERT INTO dbo.PropertyCap (solverInputsSetId, propertyId, capValue)" +
+                    "VALUES ({0}, '{1}', {2})", solverInputsSetId, propertyId, capValue);
             executeNonQuery(sql);
         }
 
@@ -168,6 +185,12 @@ namespace MultiPurposeProjectOptimizer
             executeNonQuery(sql);
         }
 
+        internal static void DeleteProjectProperty(int removedId)
+        {
+            string sql = string.Format("DELETE FROM dbo.ProjectProperty WHERE projectPropertyId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
         internal static void DeleteInfluence(int removedId)
         {
             string sql = string.Format("DELETE FROM dbo.Influence WHERE influenceId = {0}", removedId);
@@ -177,6 +200,12 @@ namespace MultiPurposeProjectOptimizer
         internal static void DeleteSolverInputsSet(int removedId)
         {
             string sql = string.Format("DELETE FROM dbo.SolverInputsSet WHERE solverInputsSetId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
+        internal static void DeletePropertyCap(int removedId)
+        {
+            string sql = string.Format("DELETE FROM dbo.PropertyCap WHERE propertyCapId = {0}", removedId);
             executeNonQuery(sql);
         }
 
@@ -219,6 +248,14 @@ namespace MultiPurposeProjectOptimizer
                 "SET setName = '{0}', " +
                 "solutionQuantityCap = {1} " +
                 "WHERE solverInputsSetId = {2}", setName, solutionQuantityCap, solverInputsSetId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdatePropertyCapValue(int propertyCapId, double capValue)
+        {
+            string sql = string.Format("UPDATE dbo.PropertyCap " +
+                "SET capValue = '{0}' " +
+                "WHERE propertyCapId = {1}", capValue, propertyCapId);
             executeNonQuery(sql);
         }
 
