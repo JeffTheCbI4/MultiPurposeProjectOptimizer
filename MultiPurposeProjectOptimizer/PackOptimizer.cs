@@ -17,6 +17,30 @@ namespace MultiPurposeProjectOptimizer
         public int SolutionSetCap { get; private set; }
         public Solution OptimalSolution { get; private set; }
 
+        public PackOptimizer(
+            Dictionary<int, Project> projects,
+            Dictionary<string, double> caps,
+            Dictionary<string, double> maximizedProperties
+            )
+        {
+            Projects = projects;
+            Caps = caps;
+            MaximizedProperties = maximizedProperties;
+        }
+
+        public PackOptimizer(
+            Dictionary<int, Project> projects,
+            Dictionary<int, MultiPurposeProject> multiPurposeProjects,
+            Dictionary<string, double> caps,
+            Dictionary<string, double> maximizedProperties
+            )
+        {
+            Projects = projects;
+            MultiPurposeProjects = multiPurposeProjects;
+            Caps = caps;
+            MaximizedProperties = maximizedProperties;
+        }
+
         public void Solve()
         {
             List<List<Solution>> solutionLists = TurnProjectsIntoSolutionLists(Projects);

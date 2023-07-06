@@ -49,7 +49,6 @@ namespace MultiPurposeProjectOptimizer
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.DeleteInfluenceButton = new System.Windows.Forms.Button();
             this.InfluencesGrid = new System.Windows.Forms.DataGridView();
-            this.label3 = new System.Windows.Forms.Label();
             this.InfluenceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InfluencedProjectId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,6 +57,7 @@ namespace MultiPurposeProjectOptimizer
             this.InfluencedPropertyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InfluencedPropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InfluenceValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ProjectPropertiesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProjectsGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InfluencesGrid)).BeginInit();
@@ -65,7 +65,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(493, 488);
+            this.OKButton.Location = new System.Drawing.Point(493, 445);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(208, 33);
             this.OKButton.TabIndex = 13;
@@ -250,16 +250,6 @@ namespace MultiPurposeProjectOptimizer
             this.InfluencesGrid.TabIndex = 21;
             this.InfluencesGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.InfluencesGrid_CellValueChanged);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(14, 213);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(163, 24);
-            this.label3.TabIndex = 25;
-            this.label3.Text = "Влияния проекта";
-            // 
             // InfluenceId
             // 
             this.InfluenceId.HeaderText = "InfluenceId";
@@ -311,11 +301,21 @@ namespace MultiPurposeProjectOptimizer
             this.InfluenceValue.HeaderText = "Значение влияния";
             this.InfluenceValue.Name = "InfluenceValue";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(14, 213);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(163, 24);
+            this.label3.TabIndex = 25;
+            this.label3.Text = "Влияния проекта";
+            // 
             // EditInfluenceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(809, 533);
+            this.ClientSize = new System.Drawing.Size(809, 500);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox3);

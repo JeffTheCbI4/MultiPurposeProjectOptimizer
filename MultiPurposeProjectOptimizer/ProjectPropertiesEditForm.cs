@@ -12,10 +12,10 @@ namespace MultiPurposeProjectOptimizer
 {
     public partial class ProjectPropertiesEditForm : Form
     {
-        ProjectsAndPropertiesForm PreviousForm;
+        Form PreviousForm;
         int ProjectId;
         bool backgroundUpdatingStatus = true;
-        public ProjectPropertiesEditForm(ProjectsAndPropertiesForm previousForm, int projectId)
+        public ProjectPropertiesEditForm(Form previousForm, int projectId)
         {
             InitializeComponent();
             PreviousForm = previousForm;

@@ -194,6 +194,12 @@
     <Compile Include="EditInfluenceForm.Designer.cs">
       <DependentUpon>EditInfluenceForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="InitialProjectsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InitialProjectsForm.Designer.cs">
+      <DependentUpon>InitialProjectsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProjectPropertiesEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,6 +211,18 @@
     </Compile>
     <Compile Include="OptimalProjectListForm.Designer.cs">
       <DependentUpon>OptimalProjectListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReadInfluenceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReadInfluenceForm.Designer.cs">
+      <DependentUpon>ReadInfluenceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReadProjectPropertiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReadProjectPropertiesForm.Designer.cs">
+      <DependentUpon>ReadProjectPropertiesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SolverInputsForm.cs">
       <SubType>Form</SubType>
@@ -243,11 +261,20 @@
     <EmbeddedResource Include="EditInfluenceForm.resx">
       <DependentUpon>EditInfluenceForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="InitialProjectsForm.resx">
+      <DependentUpon>InitialProjectsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProjectPropertiesEditForm.resx">
       <DependentUpon>ProjectPropertiesEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OptimalProjectListForm.resx">
       <DependentUpon>OptimalProjectListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReadInfluenceForm.resx">
+      <DependentUpon>ReadInfluenceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReadProjectPropertiesForm.resx">
+      <DependentUpon>ReadProjectPropertiesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SolverInputsForm.resx">
       <DependentUpon>SolverInputsForm.cs</DependentUpon>

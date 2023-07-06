@@ -30,18 +30,20 @@ namespace MultiPurposeProjectOptimizer
         private void InitializeComponent()
         {
             this.PropertyCapsGrid = new System.Windows.Forms.DataGridView();
-            this.PropertiesGrid = new System.Windows.Forms.DataGridView();
-            this.AddCapButton = new System.Windows.Forms.Button();
-            this.DeleteCapButton = new System.Windows.Forms.Button();
-            this.OKButton = new System.Windows.Forms.Button();
-            this.PropertyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PropertyRowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyCapId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CapRowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CapGridPropertyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyCapName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyCapValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PropertiesGrid = new System.Windows.Forms.DataGridView();
+            this.PropertyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PropertyRowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AddCapButton = new System.Windows.Forms.Button();
+            this.DeleteCapButton = new System.Windows.Forms.Button();
+            this.OKButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PropertyCapsGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PropertiesGrid)).BeginInit();
             this.SuspendLayout();
@@ -64,70 +66,6 @@ namespace MultiPurposeProjectOptimizer
             this.PropertyCapsGrid.TabIndex = 3;
             this.PropertyCapsGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.PropertyCapsGrid_CellValueChanged);
             this.PropertyCapsGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.PropertyCapsGrid_RowValidating);
-            // 
-            // PropertiesGrid
-            // 
-            this.PropertiesGrid.AllowUserToAddRows = false;
-            this.PropertiesGrid.AllowUserToDeleteRows = false;
-            this.PropertiesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.PropertiesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.PropertyId,
-            this.PropertyRowNumber,
-            this.PropertyName});
-            this.PropertiesGrid.Location = new System.Drawing.Point(464, 38);
-            this.PropertiesGrid.Name = "PropertiesGrid";
-            this.PropertiesGrid.ReadOnly = true;
-            this.PropertiesGrid.Size = new System.Drawing.Size(243, 365);
-            this.PropertiesGrid.TabIndex = 4;
-            // 
-            // AddCapButton
-            // 
-            this.AddCapButton.Location = new System.Drawing.Point(713, 38);
-            this.AddCapButton.Name = "AddCapButton";
-            this.AddCapButton.Size = new System.Drawing.Size(75, 23);
-            this.AddCapButton.TabIndex = 5;
-            this.AddCapButton.Text = "Добавить";
-            this.AddCapButton.UseVisualStyleBackColor = true;
-            this.AddCapButton.Click += new System.EventHandler(this.AddCapButton_Click);
-            // 
-            // DeleteCapButton
-            // 
-            this.DeleteCapButton.Location = new System.Drawing.Point(371, 38);
-            this.DeleteCapButton.Name = "DeleteCapButton";
-            this.DeleteCapButton.Size = new System.Drawing.Size(75, 23);
-            this.DeleteCapButton.TabIndex = 6;
-            this.DeleteCapButton.Text = "Удалить";
-            this.DeleteCapButton.UseVisualStyleBackColor = true;
-            this.DeleteCapButton.Click += new System.EventHandler(this.DeleteCapButton_Click);
-            // 
-            // OKButton
-            // 
-            this.OKButton.Location = new System.Drawing.Point(499, 430);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(208, 33);
-            this.OKButton.TabIndex = 7;
-            this.OKButton.Text = "ОК";
-            this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
-            // 
-            // PropertyId
-            // 
-            this.PropertyId.HeaderText = "PropertyId";
-            this.PropertyId.Name = "PropertyId";
-            this.PropertyId.ReadOnly = true;
-            this.PropertyId.Visible = false;
-            // 
-            // PropertyRowNumber
-            // 
-            this.PropertyRowNumber.HeaderText = "№";
-            this.PropertyRowNumber.Name = "PropertyRowNumber";
-            this.PropertyRowNumber.ReadOnly = true;
-            // 
-            // PropertyName
-            // 
-            this.PropertyName.HeaderText = "Название свойства";
-            this.PropertyName.Name = "PropertyName";
-            this.PropertyName.ReadOnly = true;
             // 
             // PropertyCapId
             // 
@@ -160,11 +98,97 @@ namespace MultiPurposeProjectOptimizer
             this.PropertyCapValue.HeaderText = "Значение ограничения";
             this.PropertyCapValue.Name = "PropertyCapValue";
             // 
+            // PropertiesGrid
+            // 
+            this.PropertiesGrid.AllowUserToAddRows = false;
+            this.PropertiesGrid.AllowUserToDeleteRows = false;
+            this.PropertiesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.PropertiesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.PropertyId,
+            this.PropertyRowNumber,
+            this.PropertyName});
+            this.PropertiesGrid.Location = new System.Drawing.Point(464, 38);
+            this.PropertiesGrid.Name = "PropertiesGrid";
+            this.PropertiesGrid.ReadOnly = true;
+            this.PropertiesGrid.Size = new System.Drawing.Size(243, 365);
+            this.PropertiesGrid.TabIndex = 4;
+            // 
+            // PropertyId
+            // 
+            this.PropertyId.HeaderText = "PropertyId";
+            this.PropertyId.Name = "PropertyId";
+            this.PropertyId.ReadOnly = true;
+            this.PropertyId.Visible = false;
+            // 
+            // PropertyRowNumber
+            // 
+            this.PropertyRowNumber.HeaderText = "№";
+            this.PropertyRowNumber.Name = "PropertyRowNumber";
+            this.PropertyRowNumber.ReadOnly = true;
+            // 
+            // PropertyName
+            // 
+            this.PropertyName.HeaderText = "Название свойства";
+            this.PropertyName.Name = "PropertyName";
+            this.PropertyName.ReadOnly = true;
+            // 
+            // AddCapButton
+            // 
+            this.AddCapButton.Location = new System.Drawing.Point(713, 38);
+            this.AddCapButton.Name = "AddCapButton";
+            this.AddCapButton.Size = new System.Drawing.Size(75, 23);
+            this.AddCapButton.TabIndex = 5;
+            this.AddCapButton.Text = "Добавить";
+            this.AddCapButton.UseVisualStyleBackColor = true;
+            this.AddCapButton.Click += new System.EventHandler(this.AddCapButton_Click);
+            // 
+            // DeleteCapButton
+            // 
+            this.DeleteCapButton.Location = new System.Drawing.Point(371, 38);
+            this.DeleteCapButton.Name = "DeleteCapButton";
+            this.DeleteCapButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteCapButton.TabIndex = 6;
+            this.DeleteCapButton.Text = "Удалить";
+            this.DeleteCapButton.UseVisualStyleBackColor = true;
+            this.DeleteCapButton.Click += new System.EventHandler(this.DeleteCapButton_Click);
+            // 
+            // OKButton
+            // 
+            this.OKButton.Location = new System.Drawing.Point(499, 430);
+            this.OKButton.Name = "OKButton";
+            this.OKButton.Size = new System.Drawing.Size(208, 33);
+            this.OKButton.TabIndex = 7;
+            this.OKButton.Text = "ОК";
+            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(459, 6);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(251, 29);
+            this.label2.TabIndex = 18;
+            this.label2.Text = "Список всех свойств";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(19, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(365, 29);
+            this.label1.TabIndex = 17;
+            this.label1.Text = "Список ограничений в задаче";
+            // 
             // EditCapsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(817, 475);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.DeleteCapButton);
             this.Controls.Add(this.AddCapButton);
@@ -176,6 +200,7 @@ namespace MultiPurposeProjectOptimizer
             ((System.ComponentModel.ISupportInitialize)(this.PropertyCapsGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PropertiesGrid)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -194,5 +219,7 @@ namespace MultiPurposeProjectOptimizer
         private System.Windows.Forms.DataGridViewTextBoxColumn CapGridPropertyId;
         private System.Windows.Forms.DataGridViewTextBoxColumn PropertyCapName;
         private System.Windows.Forms.DataGridViewTextBoxColumn PropertyCapValue;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }

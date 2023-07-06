@@ -36,7 +36,7 @@ namespace MultiPurposeProjectOptimizer
             this.SetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.solutionQuantityCap = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.OptimalProjectsButton = new System.Windows.Forms.Button();
             this.InitialProjectsButton = new System.Windows.Forms.Button();
             this.CapsButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
@@ -98,7 +98,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button3);
+            this.groupBox1.Controls.Add(this.OptimalProjectsButton);
             this.groupBox1.Controls.Add(this.InitialProjectsButton);
             this.groupBox1.Controls.Add(this.CapsButton);
             this.groupBox1.Controls.Add(this.DeleteButton);
@@ -111,14 +111,15 @@ namespace MultiPurposeProjectOptimizer
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Наборы вводных данных и решений";
             // 
-            // button3
+            // OptimalProjectsButton
             // 
-            this.button3.Location = new System.Drawing.Point(463, 89);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(97, 38);
-            this.button3.TabIndex = 8;
-            this.button3.Text = "Оптимальный набор проектов";
-            this.button3.UseVisualStyleBackColor = true;
+            this.OptimalProjectsButton.Location = new System.Drawing.Point(463, 89);
+            this.OptimalProjectsButton.Name = "OptimalProjectsButton";
+            this.OptimalProjectsButton.Size = new System.Drawing.Size(97, 38);
+            this.OptimalProjectsButton.TabIndex = 8;
+            this.OptimalProjectsButton.Text = "Оптимальный набор проектов";
+            this.OptimalProjectsButton.UseVisualStyleBackColor = true;
+            this.OptimalProjectsButton.Click += new System.EventHandler(this.OptimalProjectsButton_Click);
             // 
             // InitialProjectsButton
             // 
@@ -128,6 +129,7 @@ namespace MultiPurposeProjectOptimizer
             this.InitialProjectsButton.TabIndex = 7;
             this.InitialProjectsButton.Text = "Вводный набор проектов";
             this.InitialProjectsButton.UseVisualStyleBackColor = true;
+            this.InitialProjectsButton.Click += new System.EventHandler(this.InitialProjectsButton_Click);
             // 
             // CapsButton
             // 
@@ -182,7 +184,7 @@ namespace MultiPurposeProjectOptimizer
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button backButton;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button OptimalProjectsButton;
         private System.Windows.Forms.Button InitialProjectsButton;
         private System.Windows.Forms.Button CapsButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn SolverInputsSetId;

@@ -115,12 +115,24 @@ namespace MultiPurposeProjectOptimizer
             return rowsList;
         }
 
-        internal static void InsertProject(string projectName, int directionId, bool isMPP)
+        internal static List<Dictionary<string, string>> SelectProjectSolverLink(int solverInputsSetId)
         {
-            int isMPPInt = isMPP ? 1 : 0;
-            string sql = string.Format("INSERT INTO dbo.Project (projectName, directionId, isMultiPurpose)" +
-                    "VALUES ('{0}', {1}, {2})", projectName, directionId, isMPPInt);
-            executeNonQuery(sql);
+            string sql = string.Format("SELECT linkId, psl.projectId, p.projectName, isTaken from dbo.ProjectSolverLink psl " +
+                "inner join dbo.Project p " +
+                "on psl.projectId = p.projectId " +
+                "where psl.solverInputsSetId = {0}", solverInputsSetId);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectTakenProjectSolverLink(int solverInputsSetId)
+        {
+            string sql = string.Format("SELECT linkId, psl.projectId, p.projectName, p.isMultiPurpose from dbo.ProjectSolverLink psl " +
+                "inner join dbo.Project p " +
+                "on psl.projectId = p.projectId " +
+                "where psl.solverInputsSetId = {0} and psl.isTaken = 1", solverInputsSetId);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
         }
 
         internal static List<Dictionary<string, string>> SelectProperty()
@@ -136,6 +148,14 @@ namespace MultiPurposeProjectOptimizer
                 "where propertyName = '{0}'", propertyName);
             List<Dictionary<string, string>> rowsList = executeReader(sql);
             return rowsList;
+        }
+
+        internal static void InsertProject(string projectName, int directionId, bool isMPP)
+        {
+            int isMPPInt = isMPP ? 1 : 0;
+            string sql = string.Format("INSERT INTO dbo.Project (projectName, directionId, isMultiPurpose)" +
+                    "VALUES ('{0}', {1}, {2})", projectName, directionId, isMPPInt);
+            executeNonQuery(sql);
         }
 
         internal static void InsertInfluence(int influencingProjectId, int projectPropertyId, int influenceValue)
@@ -169,7 +189,15 @@ namespace MultiPurposeProjectOptimizer
         internal static void InsertPropertyCap(int solverInputsSetId, int propertyId, int capValue)
         {
             string sql = string.Format("INSERT INTO dbo.PropertyCap (solverInputsSetId, propertyId, capValue)" +
-                    "VALUES ({0}, '{1}', {2})", solverInputsSetId, propertyId, capValue);
+                    "VALUES ({0}, {1}, {2})", solverInputsSetId, propertyId, capValue);
+            executeNonQuery(sql);
+        }
+
+        internal static void InsertProjectSolverLink(int solverInputsSetId, int projectId, bool isTaken)
+        {
+            int bitIsTaken = isTaken ? 1 : 0;
+            string sql = string.Format("INSERT INTO dbo.ProjectSolverLink (solverInputsSetId, projectId, isTaken)" +
+                    "VALUES ({0}, {1}, {2})", solverInputsSetId, projectId, bitIsTaken);
             executeNonQuery(sql);
         }
 
@@ -206,6 +234,12 @@ namespace MultiPurposeProjectOptimizer
         internal static void DeletePropertyCap(int removedId)
         {
             string sql = string.Format("DELETE FROM dbo.PropertyCap WHERE propertyCapId = {0}", removedId);
+            executeNonQuery(sql);
+        }
+
+        internal static void DeleteProjectSolverLink(int removedId)
+        {
+            string sql = string.Format("DELETE FROM dbo.ProjectSolverLink WHERE linkId = {0}", removedId);
             executeNonQuery(sql);
         }
 

@@ -24,7 +24,42 @@ namespace MultiPurposeProjectOptimizer
 
         private void SolveButton_Click(object sender, EventArgs e)
         {
-            
+            int selectedRowsCount = SolverInputsGrid.SelectedRows.Count;
+            if (selectedRowsCount == 0)
+            {
+                MessageBox.Show("Не выбрана строка задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (selectedRowsCount > 1)
+            {
+                MessageBox.Show("Выбрано больше одной задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
+            Dictionary<int, Project> Projects = PrepareProjectsDictionary(solverInputsSetId);
+            Dictionary<string, double> Caps = PrepareCaps(solverInputsSetId);
+            Dictionary<string, double> MaximizedProperties = PrepareMaximizedProperties(solverInputsSetId);
+
+            PackOptimizer optimizer = new PackOptimizer(Projects, Caps, MaximizedProperties);
+            optimizer.Solve();
+        }
+
+        //TODO
+        private Dictionary<int, Project> PrepareProjectsDictionary(int solverInputsSetId)
+        {
+            return null;
+        }
+        //TODO
+        private Dictionary<string, double> PrepareCaps(int solverInputsSetId)
+        {
+            return null;
+        }
+        //TODO
+        private Dictionary<string, double> PrepareMaximizedProperties(int solverInputsSetId)
+        {
+            return null;
         }
 
         public void RefreshSolverInputsGrid()
@@ -167,6 +202,46 @@ namespace MultiPurposeProjectOptimizer
             int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
             this.Enabled = false;
             new EditCapsForm(this, solverInputsSetId).Show();
+        }
+
+        private void InitialProjectsButton_Click(object sender, EventArgs e)
+        {
+            int selectedRowsCount = SolverInputsGrid.SelectedRows.Count;
+            if (selectedRowsCount == 0)
+            {
+                MessageBox.Show("Не выбрана строка задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (selectedRowsCount > 1)
+            {
+                MessageBox.Show("Выбрано больше одной задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
+            this.Enabled = false;
+            new InitialProjectsForm(this, solverInputsSetId).Show();
+        }
+
+        private void OptimalProjectsButton_Click(object sender, EventArgs e)
+        {
+            int selectedRowsCount = SolverInputsGrid.SelectedRows.Count;
+            if (selectedRowsCount == 0)
+            {
+                MessageBox.Show("Не выбрана строка задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (selectedRowsCount > 1)
+            {
+                MessageBox.Show("Выбрано больше одной задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
+            this.Enabled = false;
+            new OptimalProjectListForm(this, solverInputsSetId).Show();
         }
     }
 }
