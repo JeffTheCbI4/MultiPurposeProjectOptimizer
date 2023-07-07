@@ -125,6 +125,17 @@ namespace MultiPurposeProjectOptimizer
             return rowsList;
         }
 
+        internal static List<Dictionary<string, string>> SelectProjectSolverLinkByMP(int solverInputsSetId, bool isMultiPurpose)
+        {
+            int bitIsMPP = isMultiPurpose ? 1 : 0;
+            string sql = string.Format("SELECT linkId, psl.projectId, p.projectName, isTaken from dbo.ProjectSolverLink psl " +
+                "inner join dbo.Project p " +
+                "on psl.projectId = p.projectId " +
+                "where psl.solverInputsSetId = {0} and p.isMultiPurpose = {1}", solverInputsSetId, bitIsMPP);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
+        }
+
         internal static List<Dictionary<string, string>> SelectTakenProjectSolverLink(int solverInputsSetId)
         {
             string sql = string.Format("SELECT linkId, psl.projectId, p.projectName, p.isMultiPurpose from dbo.ProjectSolverLink psl " +
@@ -146,6 +157,16 @@ namespace MultiPurposeProjectOptimizer
         {
             string sql = string.Format("SELECT propertyId, propertyName FROM dbo.Property " +
                 "where propertyName = '{0}'", propertyName);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectMaximizedProperty(int solverInputsSetId)
+        {
+            string sql = string.Format("SELECT maximizedPropertyId, mp.propertyId, p.propertyName FROM dbo.MaximizedProperty mp " +
+                "inner join dbo.Property p " +
+                "on mp.propertyId = p.propertyId " +
+                "where solverInputsSetId = {0}", solverInputsSetId);
             List<Dictionary<string, string>> rowsList = executeReader(sql);
             return rowsList;
         }
@@ -198,6 +219,13 @@ namespace MultiPurposeProjectOptimizer
             int bitIsTaken = isTaken ? 1 : 0;
             string sql = string.Format("INSERT INTO dbo.ProjectSolverLink (solverInputsSetId, projectId, isTaken)" +
                     "VALUES ({0}, {1}, {2})", solverInputsSetId, projectId, bitIsTaken);
+            executeNonQuery(sql);
+        }
+
+        internal static void InsertMaximizedProperty(int solverInputsSetId, int propertyId)
+        {
+            string sql = string.Format("INSERT INTO dbo.MaximizedProperty (solverInputsSetId, propertyId)" +
+                    "VALUES ({0}, {1})", solverInputsSetId, propertyId);
             executeNonQuery(sql);
         }
 
@@ -263,16 +291,16 @@ namespace MultiPurposeProjectOptimizer
         internal static void UpdateProjectPropertyValue(int projectPropertyId, double value)
         {
             string sql = string.Format("UPDATE dbo.ProjectProperty " +
-                "SET propertyValue = '{0}' " +
-                "WHERE projectPropertyId = {1}", value, projectPropertyId);
+                "SET propertyValue = {0} " +
+                "WHERE projectPropertyId = {1}", value.ToString(System.Globalization.CultureInfo.InvariantCulture), projectPropertyId);
             executeNonQuery(sql);
         }
 
         internal static void UpdateInfluenceValue(double influenceValue, int influenceId)
         {
             string sql = string.Format("UPDATE dbo.Influence " +
-                "SET influenceValue = '{0}' " +
-                "WHERE influenceId = {1}", influenceValue, influenceId);
+                "SET influenceValue = {0} " +
+                "WHERE influenceId = {1}", influenceValue.ToString(System.Globalization.CultureInfo.InvariantCulture), influenceId);
             executeNonQuery(sql);
         }
 
@@ -288,8 +316,16 @@ namespace MultiPurposeProjectOptimizer
         internal static void UpdatePropertyCapValue(int propertyCapId, double capValue)
         {
             string sql = string.Format("UPDATE dbo.PropertyCap " +
-                "SET capValue = '{0}' " +
-                "WHERE propertyCapId = {1}", capValue, propertyCapId);
+                "SET capValue = {0} " +
+                "WHERE propertyCapId = {1}", capValue.ToString(System.Globalization.CultureInfo.InvariantCulture), propertyCapId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateMaximizedProperty(int maximizedPropertyId, int propertyId)
+        {
+            string sql = string.Format("UPDATE dbo.MaximizedProperty " +
+                "SET propertyId = {0} " +
+                "WHERE maximizedPropertyId = {1}", propertyId, maximizedPropertyId);
             executeNonQuery(sql);
         }
 

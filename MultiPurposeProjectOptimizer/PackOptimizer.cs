@@ -11,7 +11,7 @@ namespace MultiPurposeProjectOptimizer
         public Dictionary<int, Project> Projects { get; private set; }
         public Dictionary<int, MultiPurposeProject> MultiPurposeProjects { get; private set; }
         public Dictionary<string, double> Caps { get; private set; }
-        public Dictionary<string, double> MaximizedProperties { get; private set; }
+        public List<string> MaximizedProperties { get; private set; }
         public string Mode { get; private set; }
         public double effectDifference { get; private set; }
         public int SolutionSetCap { get; private set; }
@@ -20,7 +20,7 @@ namespace MultiPurposeProjectOptimizer
         public PackOptimizer(
             Dictionary<int, Project> projects,
             Dictionary<string, double> caps,
-            Dictionary<string, double> maximizedProperties
+            List<string> maximizedProperties
             )
         {
             Projects = projects;
@@ -32,7 +32,7 @@ namespace MultiPurposeProjectOptimizer
             Dictionary<int, Project> projects,
             Dictionary<int, MultiPurposeProject> multiPurposeProjects,
             Dictionary<string, double> caps,
-            Dictionary<string, double> maximizedProperties
+            List<string> maximizedProperties
             )
         {
             Projects = projects;
@@ -41,11 +41,32 @@ namespace MultiPurposeProjectOptimizer
             MaximizedProperties = maximizedProperties;
         }
 
+        private void TestInputData()
+        {
+            if (Projects.Count <= 1)
+            {
+                throw new Exception("Список проектов должен иметь больше одного проекта.");
+            }
+            if (Caps.Count < 1)
+            {
+                throw new Exception("Список ограничений не должен быть пустым.");
+            }
+            if (MaximizedProperties.Count < 1)
+            {
+                throw new Exception("Не выбрано максимизируемое свойство.");
+            }
+            if (MaximizedProperties.Count > 1)
+            {
+                throw new Exception("Слишком много максимизируемых свойств.");
+            }
+        }
+
         public void Solve()
         {
+            TestInputData();
+
             List<List<Solution>> solutionLists = TurnProjectsIntoSolutionLists(Projects);
             OptimalSolution = SolveWithoutMPP(solutionLists, Caps);
-
         }
 
         /// <summary>
@@ -69,6 +90,7 @@ namespace MultiPurposeProjectOptimizer
                 solutionsLists = MergeSolutionSets(solutionsLists);
             }
             //TODO: Определяем оптимал здесь или выше?
+            //TODO: Почему так мало решений?
             Solution optimalSolution = findOptimalInSolutionSet(solutionsLists[0], history);
 
             
@@ -102,7 +124,7 @@ namespace MultiPurposeProjectOptimizer
                     projectProperties.Add(propertyName, project.Properties[propertyName]);
                 }
                 var takeProjectSolution = new Solution(
-                    zeroProperties, new Dictionary<int, bool?> { { project.Id, true } }, false);
+                    projectProperties, new Dictionary<int, bool?> { { project.Id, true } }, false);
 
                 projectSolutions.Add(noProjectSolution);
                 projectSolutions.Add(takeProjectSolution);
@@ -120,7 +142,7 @@ namespace MultiPurposeProjectOptimizer
         private List<List<Solution>> MergeSolutionSets(List<List<Solution>> solutionSets)
         {
             var newSolutionSets = new List<List<Solution>>();
-            for (int i = 1; i < solutionSets.Count; i++)
+            for (int i = 1; i < solutionSets.Count; i+=2)
             {
                 List<Solution> combinedSolutionSet = CombineTwoSolutionSets(solutionSets[i - 1], solutionSets[i]);
                 combinedSolutionSet = DiscardBadSolutions(combinedSolutionSet);
@@ -165,7 +187,7 @@ namespace MultiPurposeProjectOptimizer
                 for (int j = 0; j < solutionSet2.Count; j++)
                 {
                     var combinedSolutionProperties = new Dictionary<string, double>();
-                    foreach (string propertyName in this.MaximizedProperties.Keys)
+                    foreach (string propertyName in this.MaximizedProperties)
                     {
                         double propertyValue = solutionSet1[i].SolutionProperties[propertyName] +
                             solutionSet2[j].SolutionProperties[propertyName];
@@ -215,7 +237,8 @@ namespace MultiPurposeProjectOptimizer
                 }
             }
 
-            foreach (int i in solutionsToDiscard)
+            solutionsToDiscard.Sort();
+            for (int i = solutionsToDiscard.Count - 1; i >= 0; i--)
             {
                 solutions.RemoveAt(i);
             }
@@ -238,7 +261,7 @@ namespace MultiPurposeProjectOptimizer
                 {
                     var isLessValuableOrEqual = true;
                     var isMoreExpensiveOrEqual = true;
-                    foreach(string propertyName in MaximizedProperties.Keys)
+                    foreach(string propertyName in MaximizedProperties)
                     {
                         if (solutions[i].SolutionProperties[propertyName] > solutions[j].SolutionProperties[propertyName])
                         { 
@@ -261,8 +284,8 @@ namespace MultiPurposeProjectOptimizer
                     }
                 }
             }
-
-            foreach (int i in solutionsToDiscard)
+            solutionsToDiscard.Sort();
+            for (int i = solutionsToDiscard.Count - 1; i >= 0; i--)
             {
                 solutions.RemoveAt(i);
             }
@@ -303,7 +326,7 @@ namespace MultiPurposeProjectOptimizer
         private Solution MergeSolutionsGroup(List<Solution> solutions)
         {
             Dictionary<string, double> mergedProperties = new Dictionary<string, double>();
-            foreach (string propertyName in MaximizedProperties.Keys)
+            foreach (string propertyName in MaximizedProperties)
             {
                 double max = solutions[0].SolutionProperties[propertyName];
                 for (int i = 1; i < solutions.Count; i++)
@@ -351,7 +374,7 @@ namespace MultiPurposeProjectOptimizer
         private Solution MergeTwoSolutions(Solution firstSolution, Solution secondSolution)
         {
             Dictionary<string, double> mergedProperties = new Dictionary<string, double>();
-            foreach (string propertyName in MaximizedProperties.Keys)
+            foreach (string propertyName in MaximizedProperties)
             {
                 double firstSolutionPropertyValue = firstSolution.SolutionProperties[propertyName];
                 double secondSolutionPropertyValue = secondSolution.SolutionProperties[propertyName];
@@ -409,15 +432,15 @@ namespace MultiPurposeProjectOptimizer
         {
             for (int i = 0; i < solutions.Count; i++)
             {
-                for (int j = 0; j < solutions.Count; j++)
+                for (int j = 0; j < solutions.Count - 1; j++)
                 {
                     double firstSummaryEffect = 0;
                     double secondSummaryEffect = 0;
-                    foreach (string propertyName in MaximizedProperties.Keys)
+                    foreach (string propertyName in MaximizedProperties)
                     {
                         firstSummaryEffect += solutions[j].SolutionProperties[propertyName];
                     }
-                    foreach (string propertyName in MaximizedProperties.Keys)
+                    foreach (string propertyName in MaximizedProperties)
                     {
                         secondSummaryEffect += solutions[j + 1].SolutionProperties[propertyName];
                     }
@@ -444,7 +467,7 @@ namespace MultiPurposeProjectOptimizer
         {
             List<Solution> sortedSolutions = SortSolutions(solutions);
             Solution optimalCandidate = sortedSolutions.Last();
-            for (int i = solutions.Count; i >= 0; i--)
+            for (int i = solutions.Count - 1; i >= 0; i--)
             {
                 optimalCandidate = sortedSolutions[i];
                 if (!optimalCandidate.IsMerged) break;

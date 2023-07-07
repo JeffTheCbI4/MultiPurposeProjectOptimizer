@@ -200,6 +200,12 @@
     <Compile Include="InitialProjectsForm.Designer.cs">
       <DependentUpon>InitialProjectsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MaximizedPropertyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MaximizedPropertyForm.Designer.cs">
+      <DependentUpon>MaximizedPropertyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProjectPropertiesEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="InitialProjectsForm.resx">
       <DependentUpon>InitialProjectsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MaximizedPropertyForm.resx">
+      <DependentUpon>MaximizedPropertyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProjectPropertiesEditForm.resx">
       <DependentUpon>ProjectPropertiesEditForm.cs</DependentUpon>

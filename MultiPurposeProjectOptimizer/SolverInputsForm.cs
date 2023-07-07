@@ -38,28 +38,114 @@ namespace MultiPurposeProjectOptimizer
                 return;
             }
             int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
-            Dictionary<int, Project> Projects = PrepareProjectsDictionary(solverInputsSetId);
+            Dictionary<int, Project> Projects = PrepareNonMPProjectsDictionary(solverInputsSetId);
+            //Dictionary<int, MultiPurposeProject> MPProjects = PrepareMPProjectsDictionary(solverInputsSetId);
             Dictionary<string, double> Caps = PrepareCaps(solverInputsSetId);
-            Dictionary<string, double> MaximizedProperties = PrepareMaximizedProperties(solverInputsSetId);
+            List<string> MaximizedProperties = PrepareMaximizedProperties(solverInputsSetId);
 
             PackOptimizer optimizer = new PackOptimizer(Projects, Caps, MaximizedProperties);
             optimizer.Solve();
+            /*try
+            {
+                PackOptimizer optimizer = new PackOptimizer(Projects, Caps, MaximizedProperties);
+                optimizer.Solve();
+            } catch (Exception exception)
+            {
+                MessageBox.Show("Произошла ошибка: " + exception.Message,
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }*/
         }
 
-        //TODO
-        private Dictionary<int, Project> PrepareProjectsDictionary(int solverInputsSetId)
+        private Dictionary<int, Project> PrepareNonMPProjectsDictionary(int solverInputsSetId)
         {
-            return null;
+            Dictionary<int, Project> preparedProjectsList = new Dictionary<int, Project>();
+
+            List<Dictionary<string, string>> linkedProjectsList = DBManager.SelectProjectSolverLinkByMP(solverInputsSetId, false);
+            foreach(Dictionary<string, string> rawLinkData in linkedProjectsList)
+            {
+                int projectId = int.Parse(rawLinkData["projectId"]);
+                string projectName = rawLinkData["projectName"];
+                Dictionary<string, double> projectProperties = PrepareProjectProperties(projectId);
+                
+                Project project = new Project(projectId, projectName, projectProperties);
+                preparedProjectsList.Add(projectId, project);
+            }
+            return preparedProjectsList;
         }
-        //TODO
+
+        private Dictionary<int, MultiPurposeProject> PrepareMPProjectsDictionary(int solverInputsSetId)
+        {
+            Dictionary<int, MultiPurposeProject> preparedProjectsList = new Dictionary<int, MultiPurposeProject>();
+
+            List<Dictionary<string, string>> linkedProjectsList = DBManager.SelectProjectSolverLinkByMP(solverInputsSetId, true);
+            foreach (Dictionary<string, string> rawLinkData in linkedProjectsList)
+            {
+                int projectId = int.Parse(rawLinkData["projectId"]);
+                string projectName = rawLinkData["projectName"];
+                Dictionary<string, double> projectProperties = PrepareProjectProperties(projectId);
+                List<Influence> influences = PrepareProjectInfluences(projectId);
+
+                MultiPurposeProject project = new MultiPurposeProject(projectId, projectName, projectProperties, influences);
+                preparedProjectsList.Add(projectId, project);
+            }
+            return preparedProjectsList;
+        }
+
+        private Dictionary<string, double> PrepareProjectProperties(int projectId)
+        {
+            Dictionary<string, double> properties = new Dictionary<string, double>();
+            List<Dictionary<string, string>> projectPropertiesList = DBManager.SelectProjectProperties(projectId);
+            foreach(Dictionary<string, string> rawPropertyData in projectPropertiesList)
+            {
+                string propertyName = rawPropertyData["propertyName"];
+                double propertyValue = double.Parse(rawPropertyData["propertyValue"]);
+                properties.Add(propertyName, propertyValue);
+            }
+            return properties;
+        }
+
+        private List<Influence> PrepareProjectInfluences(int projectId)
+        {
+            List<Influence> influences = new List<Influence>();
+            List<Dictionary<string, string>> projectInfluencesList = DBManager.SelectInfluences(projectId);
+            foreach (Dictionary<string, string> rawInfluenceData in projectInfluencesList)
+            {
+                int influenceId = int.Parse(rawInfluenceData["influenceId"]);
+                int influencedProjectId = int.Parse(rawInfluenceData["projectId"]);
+                string propertyName = rawInfluenceData["propertyName"];
+                double influenceValue = double.Parse(rawInfluenceData["influenceValue"]);
+
+                Influence influence = new Influence(influenceId, influencedProjectId, propertyName, influenceValue);
+                influences.Add(influence);
+            }
+            return influences;
+        }
+
         private Dictionary<string, double> PrepareCaps(int solverInputsSetId)
         {
-            return null;
+            Dictionary<string, double> capsList = new Dictionary<string, double>();
+            List<Dictionary<string, string>> rawCapsList = DBManager.SelectPropertyCap(solverInputsSetId);
+            foreach(Dictionary<string, string> rawCapData in rawCapsList)
+            {
+                string propertyName = rawCapData["propertyName"];
+                double capValue = double.Parse(rawCapData["capValue"]);
+
+                capsList.Add(propertyName, capValue);
+            }
+            return capsList;
         }
-        //TODO
-        private Dictionary<string, double> PrepareMaximizedProperties(int solverInputsSetId)
+
+        private List<string> PrepareMaximizedProperties(int solverInputsSetId)
         {
-            return null;
+            List<string> maximizedPropertiesList = new List<string>();
+
+            List<Dictionary<string, string>> dbData = DBManager.SelectMaximizedProperty(solverInputsSetId);
+            foreach(Dictionary<string, string> row in dbData)
+            {
+                string propertyName = row["propertyName"];
+                maximizedPropertiesList.Add(propertyName);
+            }
+            return maximizedPropertiesList;
         }
 
         public void RefreshSolverInputsGrid()
@@ -242,6 +328,26 @@ namespace MultiPurposeProjectOptimizer
             int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
             this.Enabled = false;
             new OptimalProjectListForm(this, solverInputsSetId).Show();
+        }
+
+        private void MaximizedPropertyButton_Click(object sender, EventArgs e)
+        {
+            int selectedRowsCount = SolverInputsGrid.SelectedRows.Count;
+            if (selectedRowsCount == 0)
+            {
+                MessageBox.Show("Не выбрана строка задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (selectedRowsCount > 1)
+            {
+                MessageBox.Show("Выбрано больше одной задачи",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
+            this.Enabled = false;
+            new MaximizedPropertyForm(this, solverInputsSetId).Show();
         }
     }
 }

@@ -41,6 +41,7 @@ namespace MultiPurposeProjectOptimizer
             this.CapsButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.backButton = new System.Windows.Forms.Button();
+            this.MaximizedPropertyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.SolverInputsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -98,6 +99,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.MaximizedPropertyButton);
             this.groupBox1.Controls.Add(this.OptimalProjectsButton);
             this.groupBox1.Controls.Add(this.InitialProjectsButton);
             this.groupBox1.Controls.Add(this.CapsButton);
@@ -113,7 +115,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // OptimalProjectsButton
             // 
-            this.OptimalProjectsButton.Location = new System.Drawing.Point(463, 89);
+            this.OptimalProjectsButton.Location = new System.Drawing.Point(463, 132);
             this.OptimalProjectsButton.Name = "OptimalProjectsButton";
             this.OptimalProjectsButton.Size = new System.Drawing.Size(97, 38);
             this.OptimalProjectsButton.TabIndex = 8;
@@ -123,7 +125,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // InitialProjectsButton
             // 
-            this.InitialProjectsButton.Location = new System.Drawing.Point(463, 48);
+            this.InitialProjectsButton.Location = new System.Drawing.Point(463, 91);
             this.InitialProjectsButton.Name = "InitialProjectsButton";
             this.InitialProjectsButton.Size = new System.Drawing.Size(97, 35);
             this.InitialProjectsButton.TabIndex = 7;
@@ -143,7 +145,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // DeleteButton
             // 
-            this.DeleteButton.Location = new System.Drawing.Point(463, 133);
+            this.DeleteButton.Location = new System.Drawing.Point(463, 176);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(97, 23);
             this.DeleteButton.TabIndex = 5;
@@ -160,6 +162,16 @@ namespace MultiPurposeProjectOptimizer
             this.backButton.Text = "Назад";
             this.backButton.UseVisualStyleBackColor = true;
             this.backButton.Click += new System.EventHandler(this.BackButton_Click);
+            // 
+            // MaximizedPropertyButton
+            // 
+            this.MaximizedPropertyButton.Location = new System.Drawing.Point(463, 48);
+            this.MaximizedPropertyButton.Name = "MaximizedPropertyButton";
+            this.MaximizedPropertyButton.Size = new System.Drawing.Size(97, 37);
+            this.MaximizedPropertyButton.TabIndex = 9;
+            this.MaximizedPropertyButton.Text = "Максимизируемое свойство";
+            this.MaximizedPropertyButton.UseVisualStyleBackColor = true;
+            this.MaximizedPropertyButton.Click += new System.EventHandler(this.MaximizedPropertyButton_Click);
             // 
             // SolverInputsForm
             // 
@@ -191,6 +203,7 @@ namespace MultiPurposeProjectOptimizer
         private System.Windows.Forms.DataGridViewTextBoxColumn RowNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn SetName;
         private System.Windows.Forms.DataGridViewTextBoxColumn solutionQuantityCap;
+        private System.Windows.Forms.Button MaximizedPropertyButton;
     }
 }
 
