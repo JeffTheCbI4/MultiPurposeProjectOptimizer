@@ -45,6 +45,17 @@ namespace MultiPurposeProjectOptimizer
 
             PackOptimizer optimizer = new PackOptimizer(Projects, Caps, MaximizedProperties);
             optimizer.Solve();
+            DBManager.UpdateAllProjectSolverLink(solverInputsSetId, false);
+            Solution optimalSolution = optimizer.OptimalSolution;
+            foreach(int projectId in optimalSolution.ProjectStatus.Keys)
+            {
+                if ((bool)optimalSolution.ProjectStatus[projectId]) DBManager.UpdateProjectSolverLink(
+                    solverInputsSetId,
+                    projectId,
+                    true);
+            }
+            MessageBox.Show("Задача решена успешно",
+                                "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             /*try
             {
                 PackOptimizer optimizer = new PackOptimizer(Projects, Caps, MaximizedProperties);

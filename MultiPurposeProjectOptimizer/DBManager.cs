@@ -329,6 +329,24 @@ namespace MultiPurposeProjectOptimizer
             executeNonQuery(sql);
         }
 
+        internal static void UpdateAllProjectSolverLink(int solverInputsSetId, bool isTaken)
+        {
+            int bitIsTaken = isTaken ? 1 : 0;
+            string sql = string.Format("UPDATE dbo.ProjectSolverLink " +
+                "SET isTaken = {0} " +
+                "WHERE solverInputsSetId = {1}", bitIsTaken, solverInputsSetId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateProjectSolverLink(int solverInputsSetId, int projectId, bool isTaken)
+        {
+            int bitIsTaken = isTaken ? 1 : 0;
+            string sql = string.Format("UPDATE dbo.ProjectSolverLink " +
+                "SET isTaken = {0} " +
+                "WHERE solverInputsSetId = {1} and projectId = {2}", bitIsTaken, solverInputsSetId, projectId);
+            executeNonQuery(sql);
+        }
+
         public static void executeNonQuery(string sql)
         {
             try

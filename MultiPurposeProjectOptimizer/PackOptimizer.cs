@@ -237,10 +237,10 @@ namespace MultiPurposeProjectOptimizer
                 }
             }
 
-            solutionsToDiscard.Sort();
+
             for (int i = solutionsToDiscard.Count - 1; i >= 0; i--)
             {
-                solutions.RemoveAt(i);
+                solutions.RemoveAt(solutionsToDiscard[i]);
             }
             return solutions;
         }
@@ -257,7 +257,7 @@ namespace MultiPurposeProjectOptimizer
             var solutionsToDiscard = new List<int>();
             for (int i = 0; i < solutions.Count; i++)
             {
-                for (int j = i + 1; j < solutions.Count; i++)
+                for (int j = i + 1; j < solutions.Count; j++)
                 {
                     var isLessValuableOrEqual = true;
                     var isMoreExpensiveOrEqual = true;
@@ -287,7 +287,7 @@ namespace MultiPurposeProjectOptimizer
             solutionsToDiscard.Sort();
             for (int i = solutionsToDiscard.Count - 1; i >= 0; i--)
             {
-                solutions.RemoveAt(i);
+                solutions.RemoveAt(solutionsToDiscard[i]);
             }
             return solutions;
         }
@@ -446,9 +446,9 @@ namespace MultiPurposeProjectOptimizer
                     }
                     if (firstSummaryEffect > secondSummaryEffect)
                     {
-                        Solution temp = solutions[i];
-                        solutions[i] = solutions[i + 1];
-                        solutions[i + 1] = temp;
+                        Solution temp = solutions[j];
+                        solutions[j] = solutions[j + 1];
+                        solutions[j + 1] = temp;
                     }
                 }
             }
