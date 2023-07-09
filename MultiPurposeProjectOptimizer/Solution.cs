@@ -27,6 +27,25 @@ namespace MultiPurposeProjectOptimizer
             ContainedSolutions = containedSolutions;
         }
 
+        public void AddProjects(List<Project> projects)
+        {
+            for (int i = 0; i < projects.Count; i++)
+            {
+                Project project = projects[i];
+                foreach (string propertyName in project.Properties.Keys)
+                {
+                    try
+                    {
+                        SolutionProperties[propertyName] += project.Properties[propertyName];
+                    } catch(NullReferenceException e)
+                    {
+                        SolutionProperties.Add(propertyName, project.Properties[propertyName]);
+                    }
+                }
+                ProjectStatus.Add(project.Id, true);
+            }
+        }
+
 
     }
 }

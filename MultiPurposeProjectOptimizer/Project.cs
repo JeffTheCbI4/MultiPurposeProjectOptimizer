@@ -22,5 +22,15 @@ namespace MultiPurposeProjectOptimizer
         {
             this.Properties = properties;
         }
+
+        public Project copyProject()
+        {
+            Dictionary<string, double> newProperties = new Dictionary<string, double>();
+            foreach(string key in Properties.Keys)
+            {
+                newProperties.Add(key, Properties[key]);
+            }
+            return new Project(Id, Name, newProperties);
+        }
     }
 }

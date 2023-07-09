@@ -66,11 +66,17 @@ namespace MultiPurposeProjectOptimizer
             TestInputData();
 
             List<List<Solution>> solutionLists = TurnProjectsIntoSolutionLists(Projects);
-            OptimalSolution = SolveWithoutMPP(solutionLists, Caps);
+            if (MultiPurposeProjects == null || MultiPurposeProjects.Count == 0)
+            {
+                OptimalSolution = SolveWithoutMPP(solutionLists, Caps);
+            } else
+            {
+                OptimalSolution = SolveWithMPP(solutionLists, Caps);
+            }
         }
 
         /// <summary>
-        /// Поиск решения без учета многоцелевых проектов.
+        /// Поиск решения c учетом многоцелевых проектов.
         /// </summary>
         /// <param name="solutionsLists">
         /// Готовые наборы решений
@@ -79,19 +85,107 @@ namespace MultiPurposeProjectOptimizer
         /// Словарь ограничений для затрат, где ключ - это название типа затрат.
         /// </param>
         /// <returns>
-        /// Лист решений из последней стадии слияний. <= (??? Надо ещё это обдумать)
+        /// Оптимальное решение
         /// </returns>
-        private Solution SolveWithoutMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
+        private Solution SolveWithMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
+        {
+            Tuple<Solution, MultiPurposeProject[]> optimalVariant;
+
+            List<MultiPurposeProject> mppList = new List<MultiPurposeProject>();
+            foreach (int key in MultiPurposeProjects.Keys)
+            {
+                mppList.Add(MultiPurposeProjects[key]);
+            }
+            optimalVariant = ExploreAllMPPVariants(mppList, new MultiPurposeProject[0], 0);
+
+            return optimalVariant.Item1;
+        }
+
+        private Tuple<Solution, MultiPurposeProject[]> ExploreAllMPPVariants(
+            List<MultiPurposeProject> mppList,
+            MultiPurposeProject[] currentSelection, 
+            int index)
+        {
+            if (index == MultiPurposeProjects.Count)
+            {
+                // Базовый случай - все проекты рассмотрены
+                // Копируем список проектов
+                Dictionary<int, Project> newProjects = new Dictionary<int, Project>();
+                foreach (int projectId in Projects.Keys)
+                {
+                    newProjects.Add(projectId, Projects[projectId].copyProject());
+                }
+
+                //Копируем список ограничений
+                Dictionary<string, double> newCaps = new Dictionary<string, double>();
+                foreach (string propertyName in Caps.Keys)
+                {
+                    newCaps.Add(propertyName, Caps[propertyName]);
+                }
+
+                foreach (MultiPurposeProject mpp in currentSelection)
+                {
+                    for (int i = 0; i < mpp.Influence.Count; i++)
+                    {
+                        int influencedProjectId = mpp.Influence[i].InfluencedProjectId;
+                        string influencedPropertyName = mpp.Influence[i].InfluencedPropertyName;
+                        double influenceValue = mpp.Influence[i].Value;
+
+                        newProjects[influencedProjectId].Properties[influencedPropertyName] += influenceValue;
+                    }
+                    foreach(string propertyName in Caps.Keys)
+                    {
+                        newCaps[propertyName] -= mpp.Properties[propertyName];
+                    }
+                }
+                List<List<Solution>> solutionLists = TurnProjectsIntoSolutionLists(newProjects);
+                Solution optimalSolution = SolveWithoutMPP(solutionLists, newCaps);
+                optimalSolution.AddProjects(currentSelection.ToList<Project>());
+                return new Tuple<Solution, MultiPurposeProject[]>(optimalSolution, currentSelection);
+            }
+            else
+            {
+                // Рекурсивный случай
+                // Выбираем следующий проект и рекурсивно вызываем функцию для
+                // случаев с взятием и без взятия этого проекта
+                Tuple<Solution, MultiPurposeProject[]> optimalWithProject = 
+                    ExploreAllMPPVariants(mppList, currentSelection.Append(mppList[index]).ToArray(), index + 1);
+                Tuple<Solution, MultiPurposeProject[]> optimalWithoutProject = 
+                    ExploreAllMPPVariants(mppList, currentSelection, index + 1);
+                string maximizedPropertyName = MaximizedProperties[0];
+                if (optimalWithoutProject.Item1.SolutionProperties[maximizedPropertyName] >
+                    optimalWithProject.Item1.SolutionProperties[maximizedPropertyName])
+                {
+                    return optimalWithoutProject;
+                } else
+                {
+                    return optimalWithProject;
+                }
+            }
+        }
+
+            /// <summary>
+            /// Поиск решения без учета многоцелевых проектов.
+            /// </summary>
+            /// <param name="solutionsLists">
+            /// Готовые наборы решений
+            /// </param>
+            /// /// <param name="caps">
+            /// Словарь ограничений для затрат, где ключ - это название типа затрат.
+            /// </param>
+            /// <returns>
+            /// Оптимальное решение
+            /// </returns>
+            private Solution SolveWithoutMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
         {
             List<List<List<Solution>>> history = new List<List<List<Solution>>>();
             history.Add(solutionsLists);
             while (solutionsLists.Count > 1)
             {
-                solutionsLists = MergeSolutionSets(solutionsLists);
+                solutionsLists = MergeSolutionSets(solutionsLists, caps);
             }
             //TODO: Определяем оптимал здесь или выше?
-            //TODO: Почему так мало решений?
-            Solution optimalSolution = findOptimalInSolutionSet(solutionsLists[0], history);
+            Solution optimalSolution = findOptimalInSolutionSet(solutionsLists[0], history, caps);
 
             
             return optimalSolution;
@@ -139,13 +233,18 @@ namespace MultiPurposeProjectOptimizer
         /// </summary>
         /// <param name="solutionSets">Лист наборов решений.</param>
         /// <returns>Новый лист соединенных наборов решений.</returns>
-        private List<List<Solution>> MergeSolutionSets(List<List<Solution>> solutionSets)
+        private List<List<Solution>> MergeSolutionSets(List<List<Solution>> solutionSets, Dictionary<string, double> caps)
         {
             var newSolutionSets = new List<List<Solution>>();
-            for (int i = 1; i < solutionSets.Count; i+=2)
+            for (int i = 1; i <= solutionSets.Count; i+=2)
             {
+                if (i == solutionSets.Count)
+                { 
+                    newSolutionSets.Add(solutionSets[i - 1]);
+                    break;
+                }
                 List<Solution> combinedSolutionSet = CombineTwoSolutionSets(solutionSets[i - 1], solutionSets[i]);
-                combinedSolutionSet = DiscardBadSolutions(combinedSolutionSet);
+                combinedSolutionSet = DiscardBadSolutions(combinedSolutionSet, caps);
                 combinedSolutionSet = DiscardDominatedSolutions(combinedSolutionSet);
 
                 //TODO: разкомментировать код ниже когда разберемся со поиском оптимала в слитых решениях
@@ -226,14 +325,18 @@ namespace MultiPurposeProjectOptimizer
         /// </summary>
         /// <param name="solutions">Лист решений.</param>
         /// <returns>Новый лист без плохих решений.</returns>
-        private List<Solution> DiscardBadSolutions(List<Solution> solutions)
+        private List<Solution> DiscardBadSolutions(List<Solution> solutions, Dictionary<string, double> caps)
         {
             var solutionsToDiscard = new List<int>();
             for (int i = 0; i < solutions.Count; i++)
             {
-                foreach (string propertyName in Caps.Keys)
+                foreach (string propertyName in caps.Keys)
                 {
-                    if (solutions[i].SolutionProperties[propertyName] > Caps[propertyName]) solutionsToDiscard.Add(i);
+                    if (solutions[i].SolutionProperties[propertyName] > caps[propertyName]) 
+                    {
+                        solutionsToDiscard.Add(i);
+                        break;
+                    }
                 }
             }
 
@@ -463,7 +566,10 @@ namespace MultiPurposeProjectOptimizer
         /// </summary>
         /// <param name="solutions">Лист решений</param>
         /// <returns>Наиболее оптимальное решение</returns>
-        private Solution findOptimalInSolutionSet(List<Solution> solutions, List<List<List<Solution>>> history)
+        private Solution findOptimalInSolutionSet(
+            List<Solution> solutions, 
+            List<List<List<Solution>>> history,
+            Dictionary<string, double> caps)
         {
             List<Solution> sortedSolutions = SortSolutions(solutions);
             Solution optimalCandidate = sortedSolutions.Last();
@@ -471,13 +577,13 @@ namespace MultiPurposeProjectOptimizer
             {
                 optimalCandidate = sortedSolutions[i];
                 if (!optimalCandidate.IsMerged) break;
-                bool isAllowable = checkAllowability(optimalCandidate, Caps);
+                bool isAllowable = checkAllowability(optimalCandidate, caps);
                 if (isAllowable) break;
 
+                //TODO: разкомментить когда разберемся с поисками оптимала в слитых решениях
                 //TODO: дописать метод. Нужно:
                 //2) Если не допустимо, нужно перерешать всё, начиная с шага, на котором
                 //проблематичные решение возникло.
-                //TODO: разкомментить когда разберемся с поисками оптимала в слитых решениях
                 /*Dictionary<Solution, List<int>> problematicSolutionInfo = findProblematicSolutionOrigin(optimalCandidate);
                 Solution problematicSolution = problematicSolutionInfo.Keys.First();
                 List<int> path = problematicSolutionInfo[problematicSolution];
@@ -518,7 +624,7 @@ namespace MultiPurposeProjectOptimizer
                 }
 
                 List<Solution> solutionsWithoutProblematic = SolveWithoutMPP(problematicStage, Caps);*/
-                
+
             }
             return optimalCandidate;
         }

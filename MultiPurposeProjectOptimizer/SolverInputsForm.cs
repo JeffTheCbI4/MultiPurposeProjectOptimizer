@@ -39,11 +39,11 @@ namespace MultiPurposeProjectOptimizer
             }
             int solverInputsSetId = int.Parse(SolverInputsGrid.SelectedRows[0].Cells["SolverInputsSetId"].Value.ToString());
             Dictionary<int, Project> Projects = PrepareNonMPProjectsDictionary(solverInputsSetId);
-            //Dictionary<int, MultiPurposeProject> MPProjects = PrepareMPProjectsDictionary(solverInputsSetId);
+            Dictionary<int, MultiPurposeProject> MPProjects = PrepareMPProjectsDictionary(solverInputsSetId);
             Dictionary<string, double> Caps = PrepareCaps(solverInputsSetId);
             List<string> MaximizedProperties = PrepareMaximizedProperties(solverInputsSetId);
 
-            PackOptimizer optimizer = new PackOptimizer(Projects, Caps, MaximizedProperties);
+            PackOptimizer optimizer = new PackOptimizer(Projects, MPProjects, Caps, MaximizedProperties);
             optimizer.Solve();
             DBManager.UpdateAllProjectSolverLink(solverInputsSetId, false);
             Solution optimalSolution = optimizer.OptimalSolution;

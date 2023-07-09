@@ -66,7 +66,8 @@ namespace MultiPurposeProjectOptimizer
             string sql = string.Format("SELECT projectPropertyId, prop.propertyName, propertyValue FROM dbo.ProjectProperty pp " +
                 "inner join dbo.Property prop " +
                 "on pp.propertyId = prop.propertyId " +
-                "WHERE pp.projectId = {0}", projectId);
+                "WHERE pp.projectId = {0} " +
+                "order by propertyName", projectId);
             List<Dictionary<string, string>> rowsList = executeReader(sql);
             return rowsList;
         }
@@ -167,6 +168,24 @@ namespace MultiPurposeProjectOptimizer
                 "inner join dbo.Property p " +
                 "on mp.propertyId = p.propertyId " +
                 "where solverInputsSetId = {0}", solverInputsSetId);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectOptimalSolutionSumProperties(int solverInputsSetId)
+        {
+            string sql = string.Format("SELECT pp.propertyId, p.propertyName,  " +
+                "sum(pp.propertyValue) as propertyValueSum,  " +
+                "case when avg(pc.capValue) is null then 0 else avg(pc.capValue) end as avgCapValue " +
+                "from dbo.ProjectSolverLink psl " +
+                "inner join ProjectProperty pp " +
+                "on psl.projectId = pp.projectId " +
+                "inner join Property p " +
+                "on pp.propertyId = p.propertyId " +
+                "left join PropertyCap pc " +
+                "on psl.solverInputsSetId = pc.solverInputsSetId and pp.propertyId = pc.propertyId " +
+                "where psl.solverInputsSetId = {0} and psl.isTaken = 1 " +
+                "group by pp.propertyId, p.propertyName", solverInputsSetId);
             List<Dictionary<string, string>> rowsList = executeReader(sql);
             return rowsList;
         }
@@ -285,6 +304,14 @@ namespace MultiPurposeProjectOptimizer
             string sql = string.Format("UPDATE dbo.Project " +
                 "SET isMultiPurpose = {0} " +
                 "WHERE projectId = {1}", intIsMPP, projectId);
+            executeNonQuery(sql);
+        }
+
+        internal static void UpdateProperty(string propertyName, int propertyId)
+        {
+            string sql = string.Format("UPDATE dbo.Property " +
+                "SET propertyName = '{0}' " +
+                "WHERE propertyId = {1}", propertyName, propertyId);
             executeNonQuery(sql);
         }
 

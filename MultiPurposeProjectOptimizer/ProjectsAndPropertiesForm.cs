@@ -244,5 +244,19 @@ namespace MultiPurposeProjectOptimizer
             this.Enabled = false;
             new EditInfluenceForm(this, projectId).Show();
         }
+
+        private void PropertiesGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (BackgroundUpdatingStatus ||
+                PropertiesGrid.Rows[e.RowIndex].Cells["Id"].Value == null) return;
+            DataGridViewRow currentRow = PropertiesGrid.Rows[e.RowIndex];
+            if (currentRow.Cells["Id"].Value != null &&
+                int.TryParse(currentRow.Cells["Id"].Value.ToString(), out int propertyId))
+            {
+                string propertyName = currentRow.Cells["PropertyName"].Value.ToString();
+                DBManager.UpdateProperty(propertyName, propertyId);
+                currentRow.Cells["PropertyName"].ErrorText = "";
+            }
+        }
     }
 }

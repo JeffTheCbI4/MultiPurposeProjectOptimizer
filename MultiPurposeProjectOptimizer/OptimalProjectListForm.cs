@@ -20,6 +20,7 @@ namespace MultiPurposeProjectOptimizer
             PreviousForm = previousForm;
             SolverInputsSetId = solverInputsSetId;
             RefreshProjectsGrid();
+            RefreshProjectPropertyGrid();
         }
 
         public void RefreshProjectsGrid()
@@ -35,6 +36,22 @@ namespace MultiPurposeProjectOptimizer
                     i + 1,
                     project["projectName"],
                     isMultiPurpose);
+            }
+        }
+
+        public void RefreshProjectPropertyGrid()
+        {
+            ProjectPropertyGrid.Rows.Clear();
+            List<Dictionary<string, string>> propertiesList = DBManager.SelectOptimalSolutionSumProperties(SolverInputsSetId);
+            for (int i = 0; i < propertiesList.Count; i++)
+            {
+                Dictionary<string, string> property = propertiesList[i];
+                ProjectPropertyGrid.Rows.Add(
+                    property["propertyId"],
+                    i + 1,
+                    property["propertyName"],
+                    property["propertyValueSum"],
+                    property["avgCapValue"]);
             }
         }
 

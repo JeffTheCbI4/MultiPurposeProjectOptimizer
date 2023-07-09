@@ -209,6 +209,7 @@ namespace MultiPurposeProjectOptimizer
             this.PropertiesGrid.Name = "PropertiesGrid";
             this.PropertiesGrid.Size = new System.Drawing.Size(243, 151);
             this.PropertiesGrid.TabIndex = 1;
+            this.PropertiesGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.PropertiesGrid_CellValueChanged);
             this.PropertiesGrid.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.PropertiesGrid_RowValidated);
             this.PropertiesGrid.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.PropertiesGrid_RowValidating);
             // 

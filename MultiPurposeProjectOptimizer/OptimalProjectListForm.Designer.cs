@@ -41,12 +41,12 @@ namespace MultiPurposeProjectOptimizer
             this.InfluenceButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.ProjectPropertyGrid = new System.Windows.Forms.DataGridView();
-            this.label2 = new System.Windows.Forms.Label();
             this.PropertyId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ProjectPropertyRowNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PropertyValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CapValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ProjectsGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProjectPropertyGrid)).BeginInit();
             this.SuspendLayout();
@@ -162,23 +162,15 @@ namespace MultiPurposeProjectOptimizer
             this.CapValue});
             this.ProjectPropertyGrid.Location = new System.Drawing.Point(511, 66);
             this.ProjectPropertyGrid.Name = "ProjectPropertyGrid";
-            this.ProjectPropertyGrid.Size = new System.Drawing.Size(341, 359);
+            this.ProjectPropertyGrid.ReadOnly = true;
+            this.ProjectPropertyGrid.Size = new System.Drawing.Size(443, 359);
             this.ProjectPropertyGrid.TabIndex = 20;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(507, 26);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(378, 24);
-            this.label2.TabIndex = 21;
-            this.label2.Text = "Совокупные значения свойств проектов";
             // 
             // PropertyId
             // 
             this.PropertyId.HeaderText = "PropertyId";
             this.PropertyId.Name = "PropertyId";
+            this.PropertyId.ReadOnly = true;
             this.PropertyId.Visible = false;
             // 
             // ProjectPropertyRowNumber
@@ -197,17 +189,29 @@ namespace MultiPurposeProjectOptimizer
             // 
             this.PropertyValue.HeaderText = "Значение";
             this.PropertyValue.Name = "PropertyValue";
+            this.PropertyValue.ReadOnly = true;
             // 
             // CapValue
             // 
             this.CapValue.HeaderText = "Значение ограничения";
             this.CapValue.Name = "CapValue";
+            this.CapValue.ReadOnly = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(507, 26);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(378, 24);
+            this.label2.TabIndex = 21;
+            this.label2.Text = "Совокупные значения свойств проектов";
             // 
             // OptimalProjectListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(907, 450);
+            this.ClientSize = new System.Drawing.Size(982, 450);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ProjectPropertyGrid);
             this.Controls.Add(this.OKButton);
