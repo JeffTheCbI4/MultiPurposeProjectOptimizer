@@ -36,12 +36,12 @@ namespace MultiPurposeProjectOptimizer
             this.SetName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.solutionQuantityCap = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MaximizedPropertyButton = new System.Windows.Forms.Button();
             this.OptimalProjectsButton = new System.Windows.Forms.Button();
             this.InitialProjectsButton = new System.Windows.Forms.Button();
             this.CapsButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.backButton = new System.Windows.Forms.Button();
-            this.MaximizedPropertyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.SolverInputsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -108,10 +108,20 @@ namespace MultiPurposeProjectOptimizer
             this.groupBox1.Controls.Add(this.SolveButton);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(584, 250);
+            this.groupBox1.Size = new System.Drawing.Size(684, 250);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Наборы вводных данных и решений";
+            // 
+            // MaximizedPropertyButton
+            // 
+            this.MaximizedPropertyButton.Location = new System.Drawing.Point(463, 48);
+            this.MaximizedPropertyButton.Name = "MaximizedPropertyButton";
+            this.MaximizedPropertyButton.Size = new System.Drawing.Size(97, 37);
+            this.MaximizedPropertyButton.TabIndex = 9;
+            this.MaximizedPropertyButton.Text = "Максимизируемое свойство";
+            this.MaximizedPropertyButton.UseVisualStyleBackColor = true;
+            this.MaximizedPropertyButton.Click += new System.EventHandler(this.MaximizedPropertyButton_Click);
             // 
             // OptimalProjectsButton
             // 
@@ -145,7 +155,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // DeleteButton
             // 
-            this.DeleteButton.Location = new System.Drawing.Point(463, 176);
+            this.DeleteButton.Location = new System.Drawing.Point(571, 19);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(97, 23);
             this.DeleteButton.TabIndex = 5;
@@ -163,21 +173,11 @@ namespace MultiPurposeProjectOptimizer
             this.backButton.UseVisualStyleBackColor = true;
             this.backButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
-            // MaximizedPropertyButton
-            // 
-            this.MaximizedPropertyButton.Location = new System.Drawing.Point(463, 48);
-            this.MaximizedPropertyButton.Name = "MaximizedPropertyButton";
-            this.MaximizedPropertyButton.Size = new System.Drawing.Size(97, 37);
-            this.MaximizedPropertyButton.TabIndex = 9;
-            this.MaximizedPropertyButton.Text = "Максимизируемое свойство";
-            this.MaximizedPropertyButton.UseVisualStyleBackColor = true;
-            this.MaximizedPropertyButton.Click += new System.EventHandler(this.MaximizedPropertyButton_Click);
-            // 
             // SolverInputsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(614, 303);
+            this.ClientSize = new System.Drawing.Size(722, 303);
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.groupBox1);
             this.Name = "SolverInputsForm";

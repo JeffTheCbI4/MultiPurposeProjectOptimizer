@@ -49,10 +49,10 @@ namespace MultiPurposeProjectOptimizer
             this.PropertyId,
             this.PropertyRowNumber,
             this.PropertyName});
-            this.PropertiesGrid.Location = new System.Drawing.Point(12, 86);
+            this.PropertiesGrid.Location = new System.Drawing.Point(11, 124);
             this.PropertiesGrid.Name = "PropertiesGrid";
             this.PropertiesGrid.ReadOnly = true;
-            this.PropertiesGrid.Size = new System.Drawing.Size(241, 290);
+            this.PropertiesGrid.Size = new System.Drawing.Size(395, 290);
             this.PropertiesGrid.TabIndex = 22;
             this.PropertiesGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PropertiesGrid_CellDoubleClick);
             // 
@@ -79,7 +79,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(12, 45);
+            this.label1.Location = new System.Drawing.Point(11, 92);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(195, 29);
             this.label1.TabIndex = 24;
@@ -97,7 +97,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(26, 394);
+            this.OKButton.Location = new System.Drawing.Point(89, 432);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(208, 33);
             this.OKButton.TabIndex = 26;
@@ -109,7 +109,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             this.PropertyNameLabel.AutoSize = true;
             this.PropertyNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.PropertyNameLabel.Location = new System.Drawing.Point(290, 16);
+            this.PropertyNameLabel.Location = new System.Drawing.Point(13, 49);
             this.PropertyNameLabel.Name = "PropertyNameLabel";
             this.PropertyNameLabel.Size = new System.Drawing.Size(117, 24);
             this.PropertyNameLabel.TabIndex = 27;
@@ -119,7 +119,7 @@ namespace MultiPurposeProjectOptimizer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 439);
+            this.ClientSize = new System.Drawing.Size(428, 482);
             this.Controls.Add(this.PropertyNameLabel);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.MaximizerPropertyLabel);

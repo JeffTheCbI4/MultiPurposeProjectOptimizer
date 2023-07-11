@@ -94,7 +94,7 @@ namespace MultiPurposeProjectOptimizer
                 int projectId = int.Parse(rawLinkData["projectId"]);
                 string projectName = rawLinkData["projectName"];
                 Dictionary<string, double> projectProperties = PrepareProjectProperties(projectId);
-                List<Influence> influences = PrepareProjectInfluences(projectId);
+                List<Influence> influences = PrepareProjectInfluences(projectId, solverInputsSetId);
 
                 MultiPurposeProject project = new MultiPurposeProject(projectId, projectName, projectProperties, influences);
                 preparedProjectsList.Add(projectId, project);
@@ -115,10 +115,10 @@ namespace MultiPurposeProjectOptimizer
             return properties;
         }
 
-        private List<Influence> PrepareProjectInfluences(int projectId)
+        private List<Influence> PrepareProjectInfluences(int projectId, int solverInputsSetId)
         {
             List<Influence> influences = new List<Influence>();
-            List<Dictionary<string, string>> projectInfluencesList = DBManager.SelectInfluences(projectId);
+            List<Dictionary<string, string>> projectInfluencesList = DBManager.SelectRelevantInfluences(projectId, solverInputsSetId);
             foreach (Dictionary<string, string> rawInfluenceData in projectInfluencesList)
             {
                 int influenceId = int.Parse(rawInfluenceData["influenceId"]);

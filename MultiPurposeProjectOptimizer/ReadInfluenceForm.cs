@@ -14,18 +14,20 @@ namespace MultiPurposeProjectOptimizer
     {
         Form PreviousForm;
         int ProjectId;
-        public ReadInfluenceForm(Form previousForm, int projectId)
+        int SolverInputsSetId;
+        public ReadInfluenceForm(Form previousForm, int projectId, int solverInputsSetId)
         {
             InitializeComponent();
             PreviousForm = previousForm;
             ProjectId = projectId;
-            RefreshInfluencesGrid(ProjectId);
+            SolverInputsSetId = solverInputsSetId;
+            RefreshInfluencesGrid(ProjectId, SolverInputsSetId);
         }
 
-        public void RefreshInfluencesGrid(int projectId)
+        public void RefreshInfluencesGrid(int projectId, int solverInputsSetId)
         {
             InfluencesGrid.Rows.Clear();
-            List<Dictionary<string, string>> influencesList = DBManager.SelectInfluences(projectId);
+            List<Dictionary<string, string>> influencesList = DBManager.SelectRelevantInfluences(projectId, solverInputsSetId);
             for (int i = 0; i < influencesList.Count; i++)
             {
                 Dictionary<string, string> influence = influencesList[i];

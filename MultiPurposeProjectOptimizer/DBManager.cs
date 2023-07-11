@@ -29,6 +29,9 @@ namespace MultiPurposeProjectOptimizer
             builder.TrustServerCertificate = true;
 
             connection = new SqlConnection(builder.ConnectionString);
+            //Проверяем подключение
+            connection.Open();
+            connection.Close();
         }
 
         internal static List<Dictionary<string, string>> SelectProjects()
@@ -89,6 +92,29 @@ namespace MultiPurposeProjectOptimizer
                 "inner join dbo.Project proj " +
                 "on pp.projectId = proj.projectId " +
                 "where i.projectId = {0}", projectId);
+            List<Dictionary<string, string>> rowsList = executeReader(sql);
+            return rowsList;
+        }
+
+        internal static List<Dictionary<string, string>> SelectRelevantInfluences(int projectId, int solverInputsSetId)
+        {
+            string sql = string.Format("select i.influenceId, " +
+                "proj.projectId, " +
+                "proj.projectName, " +
+                "i.projectPropertyId, " +
+                "prop.propertyId, " +
+                "prop.propertyName, " +
+                "i.influenceValue " +
+                "from dbo.Influence i " +
+                "inner join dbo.ProjectProperty pp " +
+                "on i.projectPropertyId = pp.projectPropertyId " +
+                "inner join dbo.Property prop " +
+                "on pp.propertyId = prop.propertyId " +
+                "inner join dbo.Project proj " +
+                "on pp.projectId = proj.projectId " +
+                "inner join dbo.ProjectSolverLink psl " +
+                "on pp.projectId = psl.projectId " +
+                "where i.projectId = {0} and psl.solverInputsSetId = {1}", projectId, solverInputsSetId);
             List<Dictionary<string, string>> rowsList = executeReader(sql);
             return rowsList;
         }
@@ -175,16 +201,20 @@ namespace MultiPurposeProjectOptimizer
         internal static List<Dictionary<string, string>> SelectOptimalSolutionSumProperties(int solverInputsSetId)
         {
             string sql = string.Format("SELECT pp.propertyId, p.propertyName,  " +
-                "sum(pp.propertyValue) as propertyValueSum,  " +
+                "sum(pp.propertyValue) + " +
+                "sum(coalesce(i.influenceValue,0)) as propertyValueSum, " +
                 "case when avg(pc.capValue) is null then 0 else avg(pc.capValue) end as avgCapValue " +
                 "from dbo.ProjectSolverLink psl " +
                 "inner join ProjectProperty pp " +
-                "on psl.projectId = pp.projectId " +
+                "on psl.projectId = pp.projectId and psl.solverInputsSetId = {0} and psl.isTaken = 1 " +
                 "inner join Property p " +
                 "on pp.propertyId = p.propertyId " +
                 "left join PropertyCap pc " +
                 "on psl.solverInputsSetId = pc.solverInputsSetId and pp.propertyId = pc.propertyId " +
-                "where psl.solverInputsSetId = {0} and psl.isTaken = 1 " +
+                "left join Influence i " +
+                "on pp.projectPropertyId = i.projectPropertyId and " +
+                "i.projectId in " +
+                "(select projectId from ProjectSolverLink where solverInputsSetId = {0} and isTaken = 1) " +
                 "group by pp.propertyId, p.propertyName", solverInputsSetId);
             List<Dictionary<string, string>> rowsList = executeReader(sql);
             return rowsList;

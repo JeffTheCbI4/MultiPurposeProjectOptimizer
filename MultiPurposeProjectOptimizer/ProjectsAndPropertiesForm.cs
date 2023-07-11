@@ -60,12 +60,6 @@ namespace MultiPurposeProjectOptimizer
             BackgroundUpdatingStatus = false;
         }
 
-        private void ProjectAddButton_Click(object sender, EventArgs e)
-        {
-            this.Enabled = false;
-            new ProjectAddAndEditForm(this, MainMenu.Projects).Show();
-        }
-
         public void RefreshPropertyGrid()
         {
             BackgroundUpdatingStatus = true;

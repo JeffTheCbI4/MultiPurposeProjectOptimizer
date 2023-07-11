@@ -102,7 +102,7 @@ namespace MultiPurposeProjectOptimizer
             }
             int projectId = int.Parse(ProjectsGrid.SelectedRows[0].Cells["ProjectId"].Value.ToString());
             this.Enabled = false;
-            new ReadInfluenceForm(this, projectId).Show();
+            new ReadInfluenceForm(this, projectId, SolverInputsSetId).Show();
         }
     }
 }
