@@ -17,5 +17,15 @@ namespace MultiPurposeProjectOptimizer
         {
             this.Influence = influence;
         }
+
+        new public MultiPurposeProject copyProject()
+        {
+            Dictionary<string, double> newProperties = new Dictionary<string, double>();
+            foreach (string key in Properties.Keys)
+            {
+                newProperties.Add(key, Properties[key]);
+            }
+            return new MultiPurposeProject(Id, Name, newProperties, Influence);
+        }
     }
 }

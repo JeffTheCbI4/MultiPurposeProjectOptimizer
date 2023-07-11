@@ -89,21 +89,21 @@ namespace MultiPurposeProjectOptimizer
         /// </returns>
         private Solution SolveWithMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
         {
-            Tuple<Solution, MultiPurposeProject[]> optimalVariant;
+            Tuple<Solution, Dictionary<int, MultiPurposeProject>> optimalVariant;
 
             List<MultiPurposeProject> mppList = new List<MultiPurposeProject>();
             foreach (int key in MultiPurposeProjects.Keys)
             {
                 mppList.Add(MultiPurposeProjects[key]);
             }
-            optimalVariant = ExploreAllMPPVariants(mppList, new MultiPurposeProject[0], 0);
+            optimalVariant = ExploreAllMPPVariants(mppList, new Dictionary<int, MultiPurposeProject>(), 0);
 
             return optimalVariant.Item1;
         }
 
-        private Tuple<Solution, MultiPurposeProject[]> ExploreAllMPPVariants(
+        private Tuple<Solution, Dictionary<int, MultiPurposeProject>> ExploreAllMPPVariants(
             List<MultiPurposeProject> mppList,
-            MultiPurposeProject[] currentSelection, 
+            Dictionary<int, MultiPurposeProject> currentSelection, 
             int index)
         {
             if (index == MultiPurposeProjects.Count)
@@ -123,7 +123,8 @@ namespace MultiPurposeProjectOptimizer
                     newCaps.Add(propertyName, Caps[propertyName]);
                 }
 
-                foreach (MultiPurposeProject mpp in currentSelection)
+                List<Influence> influencesOnMPP = new List<Influence>();
+                foreach (MultiPurposeProject mpp in currentSelection.Values)
                 {
                     for (int i = 0; i < mpp.Influence.Count; i++)
                     {
@@ -131,7 +132,13 @@ namespace MultiPurposeProjectOptimizer
                         string influencedPropertyName = mpp.Influence[i].InfluencedPropertyName;
                         double influenceValue = mpp.Influence[i].Value;
 
-                        newProjects[influencedProjectId].Properties[influencedPropertyName] += influenceValue;
+                        if(newProjects.ContainsKey(influencedProjectId))
+                        {
+                            newProjects[influencedProjectId].Properties[influencedPropertyName] += influenceValue;
+                        } else if (currentSelection.ContainsKey(influencedProjectId))
+                        {
+                            influencesOnMPP.Add(mpp.Influence[i]);
+                        }
                     }
                     foreach(string propertyName in Caps.Keys)
                     {
@@ -140,17 +147,26 @@ namespace MultiPurposeProjectOptimizer
                 }
                 List<List<Solution>> solutionLists = TurnProjectsIntoSolutionLists(newProjects);
                 Solution optimalSolution = SolveWithoutMPP(solutionLists, newCaps);
-                optimalSolution.AddProjects(currentSelection.ToList<Project>());
-                return new Tuple<Solution, MultiPurposeProject[]>(optimalSolution, currentSelection);
+
+                foreach (Influence influence in influencesOnMPP)
+                {
+                    int mppId = influence.InfluencedProjectId;
+                    currentSelection[mppId] = currentSelection[mppId].copyProject();
+                    currentSelection[mppId].Properties[influence.InfluencedPropertyName] += influence.Value;
+                }
+                optimalSolution.AddProjects(currentSelection.Values.ToList<Project>());
+                return new Tuple<Solution, Dictionary<int, MultiPurposeProject>>(optimalSolution, currentSelection);
             }
             else
             {
                 // Рекурсивный случай
                 // Выбираем следующий проект и рекурсивно вызываем функцию для
                 // случаев с взятием и без взятия этого проекта
-                Tuple<Solution, MultiPurposeProject[]> optimalWithProject = 
-                    ExploreAllMPPVariants(mppList, currentSelection.Append(mppList[index]).ToArray(), index + 1);
-                Tuple<Solution, MultiPurposeProject[]> optimalWithoutProject = 
+                Dictionary<int, MultiPurposeProject> newSelection = new Dictionary<int, MultiPurposeProject>(currentSelection);
+                newSelection.Add(mppList[index].Id, mppList[index]);
+                Tuple<Solution, Dictionary<int, MultiPurposeProject>> optimalWithProject = 
+                    ExploreAllMPPVariants(mppList, newSelection, index + 1);
+                Tuple<Solution, Dictionary<int, MultiPurposeProject>> optimalWithoutProject = 
                     ExploreAllMPPVariants(mppList, currentSelection, index + 1);
                 string maximizedPropertyName = MaximizedProperties[0];
                 if (optimalWithoutProject.Item1.SolutionProperties[maximizedPropertyName] >

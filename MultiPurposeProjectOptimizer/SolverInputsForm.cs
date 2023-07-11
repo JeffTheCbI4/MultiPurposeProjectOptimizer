@@ -44,27 +44,25 @@ namespace MultiPurposeProjectOptimizer
             List<string> MaximizedProperties = PrepareMaximizedProperties(solverInputsSetId);
 
             PackOptimizer optimizer = new PackOptimizer(Projects, MPProjects, Caps, MaximizedProperties);
-            optimizer.Solve();
-            DBManager.UpdateAllProjectSolverLink(solverInputsSetId, false);
-            Solution optimalSolution = optimizer.OptimalSolution;
-            foreach(int projectId in optimalSolution.ProjectStatus.Keys)
+            try
             {
-                if ((bool)optimalSolution.ProjectStatus[projectId]) DBManager.UpdateProjectSolverLink(
-                    solverInputsSetId,
-                    projectId,
-                    true);
-            }
-            MessageBox.Show("Задача решена успешно",
-                                "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            /*try
-            {
-                PackOptimizer optimizer = new PackOptimizer(Projects, Caps, MaximizedProperties);
                 optimizer.Solve();
-            } catch (Exception exception)
+                DBManager.UpdateAllProjectSolverLink(solverInputsSetId, false);
+                Solution optimalSolution = optimizer.OptimalSolution;
+                foreach (int projectId in optimalSolution.ProjectStatus.Keys)
+                {
+                    if ((bool)optimalSolution.ProjectStatus[projectId]) DBManager.UpdateProjectSolverLink(
+                        solverInputsSetId,
+                        projectId,
+                        true);
+                }
+                MessageBox.Show("Задача решена успешно",
+                                    "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            } catch(Exception exception)
             {
-                MessageBox.Show("Произошла ошибка: " + exception.Message,
+                MessageBox.Show("Во время решения произошла ошибка: " + exception.Message,
                                 "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }*/
+            }
         }
 
         private Dictionary<int, Project> PrepareNonMPProjectsDictionary(int solverInputsSetId)
