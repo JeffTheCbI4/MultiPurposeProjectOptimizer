@@ -37,7 +37,7 @@ namespace MultiPurposeProjectOptimizer
                     try
                     {
                         SolutionProperties[propertyName] += project.Properties[propertyName];
-                    } catch(NullReferenceException e)
+                    } catch(KeyNotFoundException e)
                     {
                         SolutionProperties.Add(propertyName, project.Properties[propertyName]);
                     }

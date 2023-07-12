@@ -49,6 +49,12 @@ namespace MultiPurposeProjectOptimizer
                 optimizer.Solve();
                 DBManager.UpdateAllProjectSolverLink(solverInputsSetId, false);
                 Solution optimalSolution = optimizer.OptimalSolution;
+                if (optimalSolution == null)
+                {
+                    MessageBox.Show("Не найдено ни одного решения, удовлетворяющего ограничениям",
+                                    "Провал", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
                 foreach (int projectId in optimalSolution.ProjectStatus.Keys)
                 {
                     if ((bool)optimalSolution.ProjectStatus[projectId]) DBManager.UpdateProjectSolverLink(
@@ -60,7 +66,8 @@ namespace MultiPurposeProjectOptimizer
                                     "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             } catch(Exception exception)
             {
-                MessageBox.Show("Во время решения произошла ошибка: " + exception.Message,
+                MessageBox.Show("Во время решения произошла ошибка: \n" + exception.Message + "\n" +
+                    exception.StackTrace,
                                 "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

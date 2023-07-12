@@ -43,9 +43,9 @@ namespace MultiPurposeProjectOptimizer
 
         private void TestInputData()
         {
-            if (Projects.Count <= 1)
+            if (Projects.Count == 0 && MultiPurposeProjects.Count == 0)
             {
-                throw new Exception("Список проектов должен иметь больше одного проекта.");
+                throw new Exception("Список проектов пуст.");
             }
             if (Caps.Count < 1)
             {
@@ -58,6 +58,10 @@ namespace MultiPurposeProjectOptimizer
             if (MaximizedProperties.Count > 1)
             {
                 throw new Exception("Слишком много максимизируемых свойств.");
+            }
+            if (Caps.ContainsKey(MaximizedProperties[0]))
+            {
+                throw new Exception("Максимизируемое свойство не должно ограничиваться.");
             }
         }
 
@@ -96,14 +100,15 @@ namespace MultiPurposeProjectOptimizer
             {
                 mppList.Add(MultiPurposeProjects[key]);
             }
-            optimalVariant = ExploreAllMPPVariants(mppList, new Dictionary<int, MultiPurposeProject>(), 0);
+            optimalVariant = ExploreAllMPPVariants(mppList, new Dictionary<int, MultiPurposeProject>(), caps, 0);
 
             return optimalVariant.Item1;
         }
 
         private Tuple<Solution, Dictionary<int, MultiPurposeProject>> ExploreAllMPPVariants(
             List<MultiPurposeProject> mppList,
-            Dictionary<int, MultiPurposeProject> currentSelection, 
+            Dictionary<int, MultiPurposeProject> currentSelection,
+            Dictionary<string, double> caps,
             int index)
         {
             if (index == MultiPurposeProjects.Count)
@@ -118,9 +123,9 @@ namespace MultiPurposeProjectOptimizer
 
                 //Копируем список ограничений
                 Dictionary<string, double> newCaps = new Dictionary<string, double>();
-                foreach (string propertyName in Caps.Keys)
+                foreach (string propertyName in caps.Keys)
                 {
-                    newCaps.Add(propertyName, Caps[propertyName]);
+                    newCaps.Add(propertyName, caps[propertyName]);
                 }
 
                 List<Influence> influencesOnMPP = new List<Influence>();
@@ -140,13 +145,20 @@ namespace MultiPurposeProjectOptimizer
                             influencesOnMPP.Add(mpp.Influence[i]);
                         }
                     }
-                    foreach(string propertyName in Caps.Keys)
+                    foreach(string propertyName in caps.Keys)
                     {
-                        newCaps[propertyName] -= mpp.Properties[propertyName];
+                        if (mpp.Properties.ContainsKey(propertyName))
+                        {
+                            newCaps[propertyName] -= mpp.Properties[propertyName];
+                        }
                     }
                 }
                 List<List<Solution>> solutionLists = TurnProjectsIntoSolutionLists(newProjects);
                 Solution optimalSolution = SolveWithoutMPP(solutionLists, newCaps);
+                if (optimalSolution == null)
+                {
+                    return new Tuple<Solution, Dictionary<int, MultiPurposeProject>>(null, currentSelection);
+                }
 
                 foreach (Influence influence in influencesOnMPP)
                 {
@@ -165,34 +177,43 @@ namespace MultiPurposeProjectOptimizer
                 Dictionary<int, MultiPurposeProject> newSelection = new Dictionary<int, MultiPurposeProject>(currentSelection);
                 newSelection.Add(mppList[index].Id, mppList[index]);
                 Tuple<Solution, Dictionary<int, MultiPurposeProject>> optimalWithProject = 
-                    ExploreAllMPPVariants(mppList, newSelection, index + 1);
+                    ExploreAllMPPVariants(mppList, newSelection, caps, index + 1);
                 Tuple<Solution, Dictionary<int, MultiPurposeProject>> optimalWithoutProject = 
-                    ExploreAllMPPVariants(mppList, currentSelection, index + 1);
+                    ExploreAllMPPVariants(mppList, currentSelection, caps, index + 1);
                 string maximizedPropertyName = MaximizedProperties[0];
-                if (optimalWithoutProject.Item1.SolutionProperties[maximizedPropertyName] >
-                    optimalWithProject.Item1.SolutionProperties[maximizedPropertyName])
+                if (optimalWithProject.Item1 == null ||
+                    !optimalWithProject.Item1.SolutionProperties.ContainsKey(maximizedPropertyName))
                 {
                     return optimalWithoutProject;
-                } else
+                }
+                else if ((optimalWithoutProject.Item1 != null && optimalWithProject.Item1 != null &&
+                    optimalWithoutProject.Item1.SolutionProperties.ContainsKey(maximizedPropertyName) &&
+                    optimalWithProject.Item1.SolutionProperties.ContainsKey(maximizedPropertyName) &&
+                    optimalWithoutProject.Item1.SolutionProperties[maximizedPropertyName] >
+                    optimalWithProject.Item1.SolutionProperties[maximizedPropertyName]))
+                {
+                    return optimalWithoutProject;
+                }
+                else
                 {
                     return optimalWithProject;
                 }
             }
         }
 
-            /// <summary>
-            /// Поиск решения без учета многоцелевых проектов.
-            /// </summary>
-            /// <param name="solutionsLists">
-            /// Готовые наборы решений
-            /// </param>
-            /// /// <param name="caps">
-            /// Словарь ограничений для затрат, где ключ - это название типа затрат.
-            /// </param>
-            /// <returns>
-            /// Оптимальное решение
-            /// </returns>
-            private Solution SolveWithoutMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
+        /// <summary>
+        /// Поиск решения без учета многоцелевых проектов.
+        /// </summary>
+        /// <param name="solutionsLists">
+        /// Готовые наборы решений
+        /// </param>
+        /// /// <param name="caps">
+        /// Словарь ограничений для затрат, где ключ - это название типа затрат.
+        /// </param>
+        /// <returns>
+        /// Оптимальное решение
+        /// </returns>
+        private Solution SolveWithoutMPP(List<List<Solution>> solutionsLists, Dictionary<string, double> caps)
         {
             List<List<List<Solution>>> history = new List<List<List<Solution>>>();
             history.Add(solutionsLists);
@@ -200,7 +221,10 @@ namespace MultiPurposeProjectOptimizer
             {
                 solutionsLists = MergeSolutionSets(solutionsLists, caps);
             }
-            //TODO: Определяем оптимал здесь или выше?
+            if (solutionsLists.Count == 0)
+            {
+                return null;
+            }
             Solution optimalSolution = findOptimalInSolutionSet(solutionsLists[0], history, caps);
 
             
@@ -259,7 +283,7 @@ namespace MultiPurposeProjectOptimizer
                     newSolutionSets.Add(solutionSets[i - 1]);
                     break;
                 }
-                List<Solution> combinedSolutionSet = CombineTwoSolutionSets(solutionSets[i - 1], solutionSets[i]);
+                List<Solution> combinedSolutionSet = CombineTwoSolutionSets(solutionSets[i - 1], solutionSets[i], caps);
                 combinedSolutionSet = DiscardBadSolutions(combinedSolutionSet, caps);
                 combinedSolutionSet = DiscardDominatedSolutions(combinedSolutionSet);
 
@@ -294,7 +318,8 @@ namespace MultiPurposeProjectOptimizer
         /// <param name="solutionSet2">Второй набор решений.</param>
         /// <returns>Новый набор решений, созданный из двух других.</returns>
         //TODO: переписать, чтобы в project statuses вписывались только взятые проекты
-        private List<Solution> CombineTwoSolutionSets(List<Solution> solutionSet1, List<Solution> solutionSet2)
+        private List<Solution> CombineTwoSolutionSets(List<Solution> solutionSet1, List<Solution> solutionSet2,
+            Dictionary<string, double> caps)
         {
             var combinedSolutionSet = new List<Solution>();
             for (int i = 0; i < solutionSet1.Count; i++)
@@ -304,14 +329,40 @@ namespace MultiPurposeProjectOptimizer
                     var combinedSolutionProperties = new Dictionary<string, double>();
                     foreach (string propertyName in this.MaximizedProperties)
                     {
-                        double propertyValue = solutionSet1[i].SolutionProperties[propertyName] +
+                        double propertyValue = 0;
+                        if (solutionSet1[i].SolutionProperties.ContainsKey(propertyName) &&
+                            solutionSet2[j].SolutionProperties.ContainsKey(propertyName))
+                        {
+                            propertyValue = solutionSet1[i].SolutionProperties[propertyName] +
                             solutionSet2[j].SolutionProperties[propertyName];
+                        }
+                        else if (solutionSet1[i].SolutionProperties.ContainsKey(propertyName))
+                        {
+                            propertyValue = solutionSet1[i].SolutionProperties[propertyName];
+                        }
+                        else if (solutionSet2[j].SolutionProperties.ContainsKey(propertyName))
+                        {
+                            propertyValue = solutionSet2[j].SolutionProperties[propertyName];
+                        }
                         combinedSolutionProperties.Add(propertyName, propertyValue);
                     }
-                    foreach (string propertyName in this.Caps.Keys)
+                    foreach (string propertyName in caps.Keys)
                     {
-                        double propertyValue = solutionSet1[i].SolutionProperties[propertyName] +
+                        double propertyValue = 0;
+                        if (solutionSet1[i].SolutionProperties.ContainsKey(propertyName) &&
+                            solutionSet2[j].SolutionProperties.ContainsKey(propertyName))
+                        {
+                            propertyValue = solutionSet1[i].SolutionProperties[propertyName] +
                             solutionSet2[j].SolutionProperties[propertyName];
+                        }
+                        else if (solutionSet1[i].SolutionProperties.ContainsKey(propertyName))
+                        {
+                            propertyValue = solutionSet1[i].SolutionProperties[propertyName];
+                        }
+                        else if (solutionSet2[j].SolutionProperties.ContainsKey(propertyName))
+                        {
+                            propertyValue = solutionSet2[j].SolutionProperties[propertyName];
+                        }
                         combinedSolutionProperties.Add(propertyName, propertyValue);
                     }
 
@@ -348,7 +399,8 @@ namespace MultiPurposeProjectOptimizer
             {
                 foreach (string propertyName in caps.Keys)
                 {
-                    if (solutions[i].SolutionProperties[propertyName] > caps[propertyName]) 
+                    if (solutions[i].SolutionProperties.ContainsKey(propertyName) && 
+                        solutions[i].SolutionProperties[propertyName] > caps[propertyName]) 
                     {
                         solutionsToDiscard.Add(i);
                         break;
@@ -382,7 +434,9 @@ namespace MultiPurposeProjectOptimizer
                     var isMoreExpensiveOrEqual = true;
                     foreach(string propertyName in MaximizedProperties)
                     {
-                        if (solutions[i].SolutionProperties[propertyName] > solutions[j].SolutionProperties[propertyName])
+                        if (!solutions[i].SolutionProperties.ContainsKey(propertyName) ||
+                            !solutions[j].SolutionProperties.ContainsKey(propertyName) ||
+                            solutions[i].SolutionProperties[propertyName] > solutions[j].SolutionProperties[propertyName])
                         { 
                             isLessValuableOrEqual = false;
                             break;
@@ -390,7 +444,9 @@ namespace MultiPurposeProjectOptimizer
                     }
                     foreach (string propertyName in Caps.Keys)
                     {
-                        if (solutions[i].SolutionProperties[propertyName] < solutions[j].SolutionProperties[propertyName])
+                        if (!solutions[i].SolutionProperties.ContainsKey(propertyName) ||
+                            !solutions[j].SolutionProperties.ContainsKey(propertyName) ||
+                            solutions[i].SolutionProperties[propertyName] < solutions[j].SolutionProperties[propertyName])
                         {
                             isMoreExpensiveOrEqual = false;
                             break;
@@ -587,6 +643,8 @@ namespace MultiPurposeProjectOptimizer
             List<List<List<Solution>>> history,
             Dictionary<string, double> caps)
         {
+            if (solutions.Count < 1) return null;
+            DiscardBadSolutions(solutions, caps);
             List<Solution> sortedSolutions = SortSolutions(solutions);
             Solution optimalCandidate = sortedSolutions.Last();
             for (int i = solutions.Count - 1; i >= 0; i--)
@@ -698,7 +756,10 @@ namespace MultiPurposeProjectOptimizer
                 double realExpends = 0;
                 foreach (int projectId in solution.ProjectStatus.Keys)
                 {
-                    realExpends += Projects[projectId].Properties[expendName];
+                    if (Projects[projectId].Properties.ContainsKey(expendName))
+                    {
+                        realExpends += Projects[projectId].Properties[expendName];
+                    }
                 }
                 if (realExpends > caps[expendName]) return false;
             }
