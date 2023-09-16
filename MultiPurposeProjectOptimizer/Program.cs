@@ -8,6 +8,7 @@ namespace MultiPurposeProjectOptimizer
 {
     static class Program
     {
+        static List<Project> offlineProjectList = new List<Project>();
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -16,7 +17,7 @@ namespace MultiPurposeProjectOptimizer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SolverInputsForm());
+            Application.Run(new MainMenuForm());
         }
     }
 }

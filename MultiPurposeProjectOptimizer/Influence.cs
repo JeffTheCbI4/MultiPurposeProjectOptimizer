@@ -8,15 +8,17 @@ namespace MultiPurposeProjectOptimizer
 {
     class Influence
     {
-        public int InfluenceId { get; set; }
+        public int Id { get; set; }
         public int InfluencedProjectId {get; set;}
-        public Dictionary<string, double> InfluencedProperties { get; set; }
+        public string InfluencedPropertyName { get; set; }
+        public double Value { get; set; }
 
-        public Influence(int influenceId, int influencedProjectId, Dictionary<string, double> influencedProperties)
+        public Influence(int influenceId, int influencedProjectId, string influencedPropertyName, double Value)
         {
-            this.InfluenceId = influenceId;
+            this.Id = influenceId;
             this.InfluencedProjectId = influencedProjectId;
-            this.InfluencedProperties = influencedProperties;
+            this.InfluencedPropertyName = influencedPropertyName;
+            this.Value = Value;
         }
     }
 }
